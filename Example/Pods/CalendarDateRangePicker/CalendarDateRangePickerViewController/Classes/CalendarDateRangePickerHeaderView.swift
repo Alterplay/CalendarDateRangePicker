@@ -10,31 +10,51 @@ import UIKit
 
 class CalendarDateRangePickerHeaderView: UICollectionReusableView {
     
-    @objc var label: UILabel!
-    @objc var font = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize) {
+    @objc var monthLabel: UILabel!
+    @objc var yearLabel: UILabel!
+    @objc var monthFont = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize) {
         didSet {
-            label?.font = font
+            monthLabel?.font = monthFont
+        }
+    }
+    var yearFont = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize) {
+        didSet {
+            yearLabel?.font = yearFont
         }
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        initLabel()
+        setup()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
-        initLabel()
+        setup()
     }
     
-    @objc func initLabel() {
-        label = UILabel(frame: frame)
-        label.center = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
+    private func setup() {
+        translatesAutoresizingMaskIntoConstraints = false
+        let stack = UIStackView(frame: frame)
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .horizontal
+        monthLabel = buildLabel(withFont: monthFont)
+        stack.addArrangedSubview(monthLabel)
+        yearLabel = buildLabel(withFont: yearFont)
+        stack.addArrangedSubview(yearLabel)
+        addSubview(stack)
+        stack.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        stack.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        stack.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        stack.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+    }
+    
+    private func buildLabel(withFont font: UIFont?) -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = font
         label.textColor = UIColor.darkGray
-        label.textAlignment = NSTextAlignment.center
-        self.addSubview(label)
+        return label
     }
-    
 }
 

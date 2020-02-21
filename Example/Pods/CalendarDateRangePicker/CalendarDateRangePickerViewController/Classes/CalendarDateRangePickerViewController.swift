@@ -24,7 +24,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     
     @objc let itemsPerRow = 7
     @objc let itemHeight: CGFloat = 40
-    @objc let collectionViewInsets = UIEdgeInsets(top: 0, left: 25, bottom: 0, right: 25)
+    @objc let collectionViewInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     
     @objc public var minimumDate: Date!
     @objc public var maximumDate: Date!
@@ -40,7 +40,11 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     @objc public static let defaultCellFontSize:CGFloat = 15.0
     @objc public static let defaultHeaderFontSize:CGFloat = 17.0
     @objc public var cellFont:UIFont = UIFont(name: "HelveticaNeue", size: CalendarDateRangePickerViewController.defaultCellFontSize)!
-    @objc public var headerFont:UIFont = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize)!
+    @objc public var headerMonthFont: UIFont? = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize)!
+    public var headerYearFont: UIFont? = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize)!
+    public var headerMonthTextColor: UIColor? = .darkGray
+    public var headerYearTextColor: UIColor? = .darkGray
+    
 
     
     @objc public var selectedColor = UIColor(red: 66/255.0, green: 150/255.0, blue: 240/255.0, alpha: 1.0)
@@ -127,7 +131,6 @@ extension CalendarDateRangePickerViewController {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
             let datePreFormatted = dateFormatter.string(from: date)
-            let dateFormatted = dateFormatter.date(from: datePreFormatted)
          
             if disabledDates != nil{
                 if (disabledDates?.contains(cell.date!))!{
@@ -225,8 +228,13 @@ extension CalendarDateRangePickerViewController {
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as! CalendarDateRangePickerHeaderView
-            headerView.label.text = getMonthLabel(date: getFirstDateForSection(section: indexPath.section))
-            headerView.font = headerFont
+            let date = getFirstDateForSection(section: indexPath.section)
+            headerView.monthLabel.text = getMonthLabel(date: date)
+            headerView.yearLabel.text = getYearLabel(date: date)
+            headerView.monthFont = headerMonthFont
+            headerView.yearFont = headerYearFont
+            headerView.monthLabel.textColor = headerMonthTextColor
+            headerView.yearLabel.textColor = headerYearTextColor
             return headerView
         default:
             fatalError("Unexpected element kind")
@@ -315,7 +323,13 @@ extension CalendarDateRangePickerViewController {
     
     @objc func getMonthLabel(date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM yyyy"
+        dateFormatter.dateFormat = "MMMM"
+        return dateFormatter.string(from: date)
+    }
+    
+    func getYearLabel(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy"
         return dateFormatter.string(from: date)
     }
     

@@ -19,6 +19,9 @@ class ViewController: UIViewController {
         dateRangePickerViewController.minimumDate = Date()
         dateRangePickerViewController.maximumDate = Calendar.current.date(byAdding: .year, value: 2, to: Date())
         dateRangePickerViewController.selectedStartDate = Date()
+        dateRangePickerViewController.headerMonthFont = UIFont(name: "HelveticaNeue-Bold", size: CalendarDateRangePickerViewController.defaultCellFontSize)
+        dateRangePickerViewController.headerYearFont = UIFont(name: "HelveticaNeue", size: CalendarDateRangePickerViewController.defaultCellFontSize)
+        dateRangePickerViewController.headerMonthTextColor = .black
 /*
          Set disabled dates if you want. It's optional...
          
