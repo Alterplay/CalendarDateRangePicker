@@ -23,6 +23,7 @@ class ViewController: UIViewController {
         dateRangePickerViewController.headerYearFont = UIFont(name: "HelveticaNeue", size: CalendarDateRangePickerViewController.defaultCellFontSize)
         dateRangePickerViewController.headerMonthTextColor = .black
         dateRangePickerViewController.disabledCellColor = UIColor(red: 0.599, green: 0.627, blue: 0.636, alpha: 0.1)
+        dateRangePickerViewController.disabledTextColor = UIColor(red: 0.617, green: 0.67, blue: 0.708, alpha: 1)
 /*
          Set disabled dates if you want. It's optional...
          
