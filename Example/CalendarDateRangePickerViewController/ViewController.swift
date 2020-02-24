@@ -36,7 +36,7 @@ class ViewController: UIViewController {
         dateRangePickerViewController.disabledDates = [dateFormatter.date(from: "2018-11-13"), dateFormatter.date(from: "2018-11-21")] as? [Date]
          */
         dateRangePickerViewController.selectedEndDate = Calendar.current.date(byAdding: .day, value: 10, to: Date())
-        dateRangePickerViewController.selectedColor = UIColor.blue
+        dateRangePickerViewController.selectedColor = UIColor.clear
         dateRangePickerViewController.selectedLabelColor = .white
         dateRangePickerViewController.titleText = "Select Date Range"
         let navigationController = UINavigationController(rootViewController: dateRangePickerViewController)
