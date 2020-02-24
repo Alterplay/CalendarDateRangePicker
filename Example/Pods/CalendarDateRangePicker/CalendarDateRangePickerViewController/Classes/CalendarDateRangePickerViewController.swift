@@ -268,7 +268,7 @@ extension CalendarDateRangePickerViewController : UICollectionViewDelegateFlowLa
             selectedStartCell = indexPath
             delegate.didSelectStartDate(startDate: selectedStartDate)
         } else if selectedEndDate == nil {
-            if isBefore(dateA: selectedStartDate!, dateB: cell.date!) && !isBetween(selectedStartCell!, and: indexPath){
+            if isBeforeOrSame(dateA: selectedStartDate!, dateB: cell.date!) && !isBetween(selectedStartCell!, and: indexPath) {
                 selectedEndDate = cell.date
                 delegate.didSelectEndDate(endDate: selectedEndDate)
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
@@ -369,6 +369,10 @@ extension CalendarDateRangePickerViewController {
     
     @objc func isBefore(dateA: Date, dateB: Date) -> Bool {
         return Calendar.current.compare(dateA, to: dateB, toGranularity: .day) == ComparisonResult.orderedAscending
+    }
+    
+    private func isBeforeOrSame(dateA: Date, dateB: Date) -> Bool {
+        return isBefore(dateA: dateA, dateB: dateB) || Calendar.current.isDate(dateA, inSameDayAs: dateB)
     }
     
     @objc func isBetween(_ startDateCellIndex: IndexPath, and endDateCellIndex: IndexPath) -> Bool {
