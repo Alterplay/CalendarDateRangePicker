@@ -152,35 +152,35 @@ extension CalendarDateRangePickerViewController {
                 if dayOfMonth == 1 {
                     if #available(iOS 9.0, *) {
                         if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
-                            cell.highlightLeft()
+                            cell.hideRightVisiblePieceOfSelection()
                         }
                         else{
-                            cell.highlightRight()
+                            cell.hideLeftVisiblePieceOfSelection()
                         }
                     } else {
                         // Use the previous technique
                         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                            cell.highlightLeft()
+                            cell.hideRightVisiblePieceOfSelection()
                         }
                         else{
-                            cell.highlightRight()
+                            cell.hideLeftVisiblePieceOfSelection()
                         }
                     }
                 } else if dayOfMonth == getNumberOfDaysInMonth(date: date) {
                     if #available(iOS 9.0, *) {
                         if UIView.appearance().semanticContentAttribute == .forceRightToLeft{
-                            cell.highlightRight()
+                            cell.hideLeftVisiblePieceOfSelection()
                         }
                         else{
-                            cell.highlightLeft()
+                            cell.hideRightVisiblePieceOfSelection()
                         }
                     } else {
                         // Use the previous technique
                         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                            cell.highlightRight()
+                            cell.hideLeftVisiblePieceOfSelection()
                         }
                         else{
-                            cell.highlightLeft()
+                            cell.hideRightVisiblePieceOfSelection()
                         }
                     }
                 } else {
@@ -192,18 +192,18 @@ extension CalendarDateRangePickerViewController {
                 if selectedEndDate != nil {
                     if #available(iOS 9.0, *) {
                         if UIView.appearance().semanticContentAttribute == .forceRightToLeft{
-                            cell.highlightLeft()
+                            cell.hideRightVisiblePieceOfSelection()
                         }
                         else{
-                            cell.highlightRight()
+                            cell.hideLeftVisiblePieceOfSelection()
                         }
                     } else {
                         // Use the previous technique
                         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                            cell.highlightLeft()
+                            cell.hideRightVisiblePieceOfSelection()
                         }
                         else{
-                            cell.highlightRight()
+                            cell.hideLeftVisiblePieceOfSelection()
                         }
                     }
                 }
@@ -211,18 +211,18 @@ extension CalendarDateRangePickerViewController {
                 cell.select(with: .end)
                 if #available(iOS 9.0, *) {
                     if UIView.appearance().semanticContentAttribute == .forceRightToLeft{
-                        cell.highlightRight()
+                        cell.hideLeftVisiblePieceOfSelection()
                     }
                     else{
-                        cell.highlightLeft()
+                        cell.hideRightVisiblePieceOfSelection()
                     }
                 } else {
                     // Use the previous technique
                     if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                        cell.highlightRight()
+                        cell.hideLeftVisiblePieceOfSelection()
                     }
                     else{
-                        cell.highlightLeft()
+                        cell.hideRightVisiblePieceOfSelection()
                     }
                 }
             }

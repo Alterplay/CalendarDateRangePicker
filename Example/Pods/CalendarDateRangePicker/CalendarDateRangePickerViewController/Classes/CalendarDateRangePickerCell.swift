@@ -40,6 +40,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     var cellBackgroundView: UIView!
     var leftSelectionImage: UIImage?
     var rightSelectionImage: UIImage?
+    private var highlightedView: UIView!
     
     @objc private var label: UILabel!
     
@@ -63,6 +64,13 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         cellBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Consts.padding).isActive = true
         cellBackgroundView.layer.cornerRadius = 6
         
+        var highlightedFrame = frame
+        highlightedFrame.origin.x = 0
+        highlightedFrame.origin.y = Consts.padding
+        highlightedFrame.size.height = frame.height - Consts.padding * 2
+        highlightedView = UIView(frame: highlightedFrame)
+        addSubview(highlightedView)
+        
         label = UILabel(frame: frame)
         label.center = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
         label.font = font
@@ -77,6 +85,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         label.backgroundColor = UIColor.clear
         cellBackgroundView.backgroundColor = .white
         cellBackgroundView.isHidden = false
+        highlightedView.isHidden = true
         
         if selectedView != nil {
             selectedView?.removeFromSuperview()
@@ -108,30 +117,28 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
             selectedView?.image = leftSelectionImage
         case .end:
             selectedView?.image = rightSelectionImage
-            selectedView?.layer.cornerRadius = 6
         case .single:
             selectedView?.image = nil
         }
     }
     
-    @objc func highlightRight() {
-        // This is used instead of highlight() when we need to highlight cell with a rounded edge on the left
+    @objc func hideLeftVisiblePieceOfSelection() {
         let width = self.frame.size.width
         let height = self.frame.size.height
-        halfBackgroundView = UIView(frame: CGRect(x: width / 2, y: 0, width: width / 2, height: height))
-        halfBackgroundView?.backgroundColor = highlightedColor
+        halfBackgroundView = UIView(frame: CGRect(x: 0, y: 0, width: width / 2, height: height))
+        halfBackgroundView?.backgroundColor = .white
         self.addSubview(halfBackgroundView!)
         self.sendSubviewToBack(halfBackgroundView!)
         label.textColor = highlightedLabelColor
         addRoundHighlightView()
     }
     
-    @objc func highlightLeft() {
+    @objc func hideRightVisiblePieceOfSelection() {
         // This is used instead of highlight() when we need to highlight the cell with a rounded edge on the right.
         let width = self.frame.size.width
         let height = self.frame.size.height
-        halfBackgroundView = UIView(frame: CGRect(x: 0, y: 0, width: width / 2, height: height))
-        halfBackgroundView?.backgroundColor = highlightedColor
+        halfBackgroundView = UIView(frame: CGRect(x: width / 2, y: 0, width: width / 2, height: height))
+        halfBackgroundView?.backgroundColor = .white
         self.addSubview(halfBackgroundView!)
         self.sendSubviewToBack(halfBackgroundView!)
         label.textColor = highlightedLabelColor
@@ -140,18 +147,16 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     }
     
     @objc func addRoundHighlightView() {
-        let width = self.frame.size.width
-        let height = self.frame.size.height
-        roundHighlightView = UIView(frame: CGRect(x: (width - height) / 2, y: 0, width: height, height: height))
+        roundHighlightView = UIView(frame: highlightedView.frame)
         roundHighlightView?.backgroundColor = highlightedColor
-        roundHighlightView?.layer.cornerRadius = height / 2
         self.addSubview(roundHighlightView!)
         self.sendSubviewToBack(roundHighlightView!)
     }
     
     @objc func highlight() {
-        self.backgroundColor = highlightedColor
         cellBackgroundView.isHidden = true
+        highlightedView.backgroundColor = highlightedColor
+        highlightedView.isHidden = false
         label.textColor = highlightedLabelColor
     }
     
