@@ -122,14 +122,14 @@ extension CalendarDateRangePickerViewController {
         cell.reset()
         let blankItems = getWeekday(date: getFirstDateForSection(section: indexPath.section)) - 1
         if indexPath.item < 7 {
-            cell.label.text = getWeekdayLabel(weekday: indexPath.item + 1)
+            cell.setText(getWeekdayLabel(weekday: indexPath.item + 1), dropShadow: false)
         } else if indexPath.item < 7 + blankItems {
-            cell.label.text = ""
+            cell.setText("", dropShadow: false)
         } else {
             let dayOfMonth = indexPath.item - (7 + blankItems) + 1
             let date = getDate(dayOfMonth: dayOfMonth, section: indexPath.section)
             cell.date = date
-            cell.label.text = "\(dayOfMonth)"
+            cell.setText("\(dayOfMonth)", dropShadow: true)
 
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"

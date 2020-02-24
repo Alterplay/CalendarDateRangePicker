@@ -35,7 +35,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     @objc var roundHighlightView: UIView?
     var cellBackgroundView: UIView!
     
-    @objc var label: UILabel!
+    @objc private var label: UILabel!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -55,6 +55,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         cellBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Consts.padding).isActive = true
         cellBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Consts.padding).isActive = true
         cellBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Consts.padding).isActive = true
+        cellBackgroundView.layer.cornerRadius = 6
         
         label = UILabel(frame: frame)
         label.center = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
@@ -69,6 +70,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         label.textColor = defaultTextColor
         label.backgroundColor = UIColor.clear
         cellBackgroundView.backgroundColor = .white
+        
         if selectedView != nil {
             selectedView?.removeFromSuperview()
             selectedView = nil
@@ -139,6 +141,32 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     @objc func disable() {
         cellBackgroundView.backgroundColor = disabledBackgroundColor
         label.textColor = disabledLabelColor
+        removeShadow()
     }
     
+    func setText(_ text: String, dropShadow: Bool) {
+        label.text = text
+        if dropShadow {
+            addShadow()
+        }
+        else {
+            removeShadow()
+        }
+    }
+}
+
+private extension CalendarDateRangePickerCell {
+    func addShadow() {
+        let bounds = CGRect(x: 0, y: 0, width: frame.width - Consts.padding * 2, height: frame.width - Consts.padding * 2)
+        let shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: layer.cornerRadius)
+        cellBackgroundView.layer.shadowPath = shadowPath.cgPath
+        cellBackgroundView.layer.shadowColor = UIColor(red: 0.165, green: 0.208, blue: 0.239, alpha: 0.06).cgColor
+        cellBackgroundView.layer.shadowOpacity = 1
+        cellBackgroundView.layer.shadowRadius = 6
+        cellBackgroundView.layer.shadowOffset = CGSize(width: 0, height: 4)
+    }
+    
+    func removeShadow() {
+        cellBackgroundView.layer.shadowOpacity = 0
+    }
 }
