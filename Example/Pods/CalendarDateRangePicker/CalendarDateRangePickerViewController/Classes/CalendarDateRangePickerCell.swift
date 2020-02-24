@@ -15,7 +15,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     }
     
     private let defaultTextColor = UIColor.darkGray
-    var highlightedColor = UIColor(white: 0.9, alpha: 1.0)
+    var highlightedColor: UIColor!
     var font = UIFont(name: "HelveticaNeue", size: CalendarDateRangePickerViewController.defaultCellFontSize) {
         didSet {
             label?.font = font
