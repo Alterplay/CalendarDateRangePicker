@@ -10,6 +10,10 @@ import UIKit
 
 class CalendarDateRangePickerCell: UICollectionViewCell {
     
+    private enum Consts {
+        static let padding: CGFloat = 5
+    }
+    
     private let defaultTextColor = UIColor.darkGray
     var highlightedColor = UIColor(white: 0.9, alpha: 1.0)
     private let disabledColor = UIColor.lightGray
@@ -22,26 +26,36 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     @objc var selectedColor: UIColor!
     @objc var selectedLabelColor: UIColor!
     @objc var highlightedLabelColor: UIColor!
+    var disabledBackgroundColor: UIColor!
     @objc var disabledDates: [Date]!
     @objc var disabledTimestampDates: [Int]?
     @objc var date: Date?
     @objc var selectedView: UIView?
     @objc var halfBackgroundView: UIView?
     @objc var roundHighlightView: UIView?
+    var cellBackgroundView: UIView!
     
     @objc var label: UILabel!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        initLabel()
+        setup()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
-        initLabel()
+        setup()
     }
     
-    @objc func initLabel() {
+    @objc func setup() {
+        cellBackgroundView = UIView()
+        cellBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(cellBackgroundView)
+        cellBackgroundView.topAnchor.constraint(equalTo: topAnchor, constant: Consts.padding).isActive = true
+        cellBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Consts.padding).isActive = true
+        cellBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Consts.padding).isActive = true
+        cellBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Consts.padding).isActive = true
+        
         label = UILabel(frame: frame)
         label.center = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
         label.font = font
@@ -54,6 +68,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         self.backgroundColor = UIColor.clear
         label.textColor = defaultTextColor
         label.backgroundColor = UIColor.clear
+        cellBackgroundView.backgroundColor = .white
         if selectedView != nil {
             selectedView?.removeFromSuperview()
             selectedView = nil
@@ -122,8 +137,8 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     }
     
     @objc func disable() {
+        cellBackgroundView.backgroundColor = disabledBackgroundColor
         label.textColor = disabledColor
-        
     }
     
 }
