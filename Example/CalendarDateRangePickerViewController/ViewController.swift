@@ -24,6 +24,9 @@ class ViewController: UIViewController {
         dateRangePickerViewController.headerMonthTextColor = .black
         dateRangePickerViewController.disabledCellColor = UIColor(red: 0.599, green: 0.627, blue: 0.636, alpha: 0.1)
         dateRangePickerViewController.disabledTextColor = UIColor(red: 0.617, green: 0.67, blue: 0.708, alpha: 1)
+        dateRangePickerViewController.cellHighlightedColor = UIColor(red: 0.173, green: 0.694, blue: 0.384, alpha: 0.5)
+        dateRangePickerViewController.leftSelectionImage = UIImage(named: "start")
+        dateRangePickerViewController.rightSelectionImage = UIImage(named: "end")
 /*
          Set disabled dates if you want. It's optional...
          
@@ -33,7 +36,8 @@ class ViewController: UIViewController {
         dateRangePickerViewController.disabledDates = [dateFormatter.date(from: "2018-11-13"), dateFormatter.date(from: "2018-11-21")] as? [Date]
          */
         dateRangePickerViewController.selectedEndDate = Calendar.current.date(byAdding: .day, value: 10, to: Date())
-        dateRangePickerViewController.selectedColor = UIColor.red
+        dateRangePickerViewController.selectedColor = UIColor.blue
+        dateRangePickerViewController.selectedLabelColor = .white
         dateRangePickerViewController.titleText = "Select Date Range"
         let navigationController = UINavigationController(rootViewController: dateRangePickerViewController)
         self.navigationController?.present(navigationController, animated: true, completion: nil)

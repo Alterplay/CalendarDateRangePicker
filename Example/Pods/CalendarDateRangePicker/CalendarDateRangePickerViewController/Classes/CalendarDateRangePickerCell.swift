@@ -10,6 +10,10 @@ import UIKit
 
 class CalendarDateRangePickerCell: UICollectionViewCell {
     
+    enum SelectionType {
+        case single, begining, end
+    }
+    
     private enum Consts {
         static let padding: CGFloat = 5
     }
@@ -30,10 +34,12 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     @objc var disabledDates: [Date]!
     @objc var disabledTimestampDates: [Int]?
     @objc var date: Date?
-    @objc var selectedView: UIView?
+    @objc var selectedView: UIImageView?
     @objc var halfBackgroundView: UIView?
     @objc var roundHighlightView: UIView?
     var cellBackgroundView: UIView!
+    var leftSelectionImage: UIImage?
+    var rightSelectionImage: UIImage?
     
     @objc private var label: UILabel!
     
@@ -70,6 +76,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         label.textColor = defaultTextColor
         label.backgroundColor = UIColor.clear
         cellBackgroundView.backgroundColor = .white
+        cellBackgroundView.isHidden = false
         
         if selectedView != nil {
             selectedView?.removeFromSuperview()
@@ -85,16 +92,26 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         }
     }
     
-    @objc func select() {
-        let width = self.frame.size.width
-        let height = self.frame.size.height
-        selectedView = UIView(frame: CGRect(x: (width - height) / 2, y: 0, width: height, height: height))
+    func select(with selectionType: SelectionType) {
+        let width = self.frame.size.width - 6
+        let height = self.frame.size.height - Consts.padding * 2 + 4
+        selectedView = UIImageView(frame: CGRect(x: Consts.padding, y: Consts.padding - 2, width: width, height: height))
         selectedView?.backgroundColor = selectedColor
-        selectedView?.layer.cornerRadius = height / 2
+        selectedView?.layer.cornerRadius = 6
         self.addSubview(selectedView!)
         self.sendSubviewToBack(selectedView!)
+        cellBackgroundView.isHidden = true
         
         label.textColor = selectedLabelColor
+        switch selectionType {
+        case .begining:
+            selectedView?.image = leftSelectionImage
+        case .end:
+            selectedView?.image = rightSelectionImage
+            selectedView?.layer.cornerRadius = 6
+        case .single:
+            selectedView?.image = nil
+        }
     }
     
     @objc func highlightRight() {
@@ -134,8 +151,8 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     
     @objc func highlight() {
         self.backgroundColor = highlightedColor
+        cellBackgroundView.isHidden = true
         label.textColor = highlightedLabelColor
-
     }
     
     @objc func disable() {

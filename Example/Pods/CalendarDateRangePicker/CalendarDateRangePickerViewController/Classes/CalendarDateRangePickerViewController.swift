@@ -43,7 +43,8 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     public var headerYearFont: UIFont? = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize)!
     public var headerMonthTextColor: UIColor? = .darkGray
     public var headerYearTextColor: UIColor? = .darkGray
-    
+    public var leftSelectionImage: UIImage?
+    public var rightSelectionImage: UIImage?
 
     
     @objc public var selectedColor = UIColor(red: 66/255.0, green: 150/255.0, blue: 240/255.0, alpha: 1.0)
@@ -119,6 +120,8 @@ extension CalendarDateRangePickerViewController {
         cell.disabledBackgroundColor = self.disabledCellColor
         cell.disabledLabelColor = self.disabledTextColor
         cell.font = self.cellFont
+        cell.leftSelectionImage = leftSelectionImage
+        cell.rightSelectionImage = rightSelectionImage
         cell.reset()
         let blankItems = getWeekday(date: getFirstDateForSection(section: indexPath.section)) - 1
         if indexPath.item < 7 {
@@ -185,7 +188,7 @@ extension CalendarDateRangePickerViewController {
                 }
             } else if selectedStartDate != nil && areSameDay(dateA: date, dateB: selectedStartDate!) {
                 // Cell is selected start date
-                cell.select()
+                cell.select(with: selectedEndDate == nil ? .single : .begining)
                 if selectedEndDate != nil {
                     if #available(iOS 9.0, *) {
                         if UIView.appearance().semanticContentAttribute == .forceRightToLeft{
@@ -205,7 +208,7 @@ extension CalendarDateRangePickerViewController {
                     }
                 }
             } else if selectedEndDate != nil && areSameDay(dateA: date, dateB: selectedEndDate!) {
-                cell.select()
+                cell.select(with: .end)
                 if #available(iOS 9.0, *) {
                     if UIView.appearance().semanticContentAttribute == .forceRightToLeft{
                         cell.highlightRight()
