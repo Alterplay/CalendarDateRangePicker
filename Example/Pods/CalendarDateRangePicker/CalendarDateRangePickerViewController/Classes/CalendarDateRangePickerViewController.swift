@@ -151,10 +151,15 @@ extension CalendarDateRangePickerViewController {
                 cell.highlight()
             } else if selectedStartDate != nil && areSameDay(dateA: date, dateB: selectedStartDate!) {
                 // Cell is selected start date
-                cell.select(with: selectedEndDate == nil ? .single : .begining)
+                let selectionType: CalendarDateRangePickerCell.SelectionType
+                if selectedEndDate == nil || areSameDay(dateA: selectedStartDate!, dateB: selectedEndDate!) {
+                    selectionType = .single
+                } else {
+                    selectionType = .begining
+                }
+                cell.select(with: selectionType)
             } else if selectedEndDate != nil && areSameDay(dateA: date, dateB: selectedEndDate!) {
                 cell.select(with: .end)
-//               
             }
         }
         return cell
