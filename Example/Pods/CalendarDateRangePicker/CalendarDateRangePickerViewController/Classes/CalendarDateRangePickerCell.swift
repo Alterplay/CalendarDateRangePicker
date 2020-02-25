@@ -106,27 +106,32 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     }
     
     func select(with selectionType: SelectionType) {
+        let y = Consts.padding - 2
         let width = self.frame.size.width - 6
         let height = self.frame.size.height - Consts.padding * 2 + 4
-        selectedImageView = UIImageView(frame: CGRect(x: Consts.padding, y: Consts.padding - 2, width: width, height: height))
-        selectedImageView?.layer.cornerRadius = 6
-        self.addSubview(selectedImageView!)
-        self.sendSubviewToBack(selectedImageView!)
+        
         cellBackgroundView.isHidden = true
         
         label.textColor = selectedLabelColor
         switch selectionType {
         case .begining:
+            let x = Consts.padding
+            selectedImageView = UIImageView(frame: CGRect(x: x, y: y, width: width, height: height))
             selectedImageView?.image = leftSelectionImage
+            self.addSubview(selectedImageView!)
+            self.sendSubviewToBack(selectedImageView!)
             hideLeftVisiblePieceOfSelection()
         case .end:
+            let x = -Consts.padding + 6
+            selectedImageView = UIImageView(frame: CGRect(x: x, y: y, width: width, height: height))
             selectedImageView?.image = rightSelectionImage
+            self.addSubview(selectedImageView!)
+            self.sendSubviewToBack(selectedImageView!)
             hideRightVisiblePieceOfSelection()
         case .single:
             cellBackgroundView.backgroundColor = selectedColor
             cellBackgroundView.isHidden = false
             addShadow()
-            selectedImageView?.image = nil
         }
     }
     
