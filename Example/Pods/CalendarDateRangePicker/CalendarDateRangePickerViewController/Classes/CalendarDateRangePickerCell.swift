@@ -134,7 +134,6 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     }
     
     @objc func hideRightVisiblePieceOfSelection() {
-        // This is used instead of highlight() when we need to highlight the cell with a rounded edge on the right.
         let width = self.frame.size.width
         let height = self.frame.size.height
         halfBackgroundView = UIView(frame: CGRect(x: width / 2, y: 0, width: width / 2, height: height))
