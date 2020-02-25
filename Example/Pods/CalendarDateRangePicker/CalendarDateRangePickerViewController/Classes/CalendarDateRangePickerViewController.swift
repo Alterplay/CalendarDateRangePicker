@@ -149,7 +149,13 @@ extension CalendarDateRangePickerViewController {
             
             if selectedStartDate != nil && selectedEndDate != nil && isBefore(dateA: selectedStartDate!, dateB: date) && isBefore(dateA: date, dateB: selectedEndDate!) {
                 var edge = CalendarDateRangePickerCell.Edge.allVisible
-                cell.highlight(edgeToRemove: .allVisible)
+                if indexPath.row % itemsPerRow == 0 {
+                    edge = .left
+                }
+                else if (indexPath.row + 1) % itemsPerRow == 0 {
+                    edge = .right
+                }
+                cell.highlight(edgeToRemove: edge)
             } else if selectedStartDate != nil && areSameDay(dateA: date, dateB: selectedStartDate!) {
                 // Cell is selected start date
                 let selectionType: CalendarDateRangePickerCell.SelectionType

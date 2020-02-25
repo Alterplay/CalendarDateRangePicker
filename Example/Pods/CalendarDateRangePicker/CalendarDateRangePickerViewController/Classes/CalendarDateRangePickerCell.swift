@@ -166,8 +166,6 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         cellBackgroundView.isHidden = true
     }
     
-    
-    
     func highlight(edgeToRemove: Edge) {
         cellBackgroundView.isHidden = true
         highlightedView.backgroundColor = highlightedColor
@@ -179,6 +177,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
             highlightedView.frame.size.width = frame.width
         case .left:
             highlightedView.frame.origin.x = Consts.padding
+            highlightedView.frame.size.width -= Consts.padding
         case .right:
             highlightedView.frame.size.width = frame.width - Consts.padding
         }
