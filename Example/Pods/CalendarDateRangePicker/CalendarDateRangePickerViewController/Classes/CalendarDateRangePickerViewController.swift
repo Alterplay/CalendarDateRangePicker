@@ -308,7 +308,7 @@ extension CalendarDateRangePickerViewController {
             return "E"
         }
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEEE"
+        dateFormatter.dateFormat = "EEEEEE"
         return dateFormatter.string(from: date!)
     }
     
