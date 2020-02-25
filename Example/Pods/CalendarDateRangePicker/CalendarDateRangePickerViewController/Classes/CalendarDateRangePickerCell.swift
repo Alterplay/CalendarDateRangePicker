@@ -34,7 +34,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     @objc var disabledDates: [Date]!
     @objc var disabledTimestampDates: [Int]?
     @objc var date: Date?
-    @objc var selectedView: UIImageView?
+    @objc var selectedImageView: UIImageView?
     @objc var halfBackgroundView: UIView?
     @objc var roundHighlightView: UIView?
     var cellBackgroundView: UIView!
@@ -87,9 +87,9 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         cellBackgroundView.isHidden = false
         highlightedView.isHidden = true
         
-        if selectedView != nil {
-            selectedView?.removeFromSuperview()
-            selectedView = nil
+        if selectedImageView != nil {
+            selectedImageView?.removeFromSuperview()
+            selectedImageView = nil
         }
         if halfBackgroundView != nil {
             halfBackgroundView?.removeFromSuperview()
@@ -104,25 +104,29 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     func select(with selectionType: SelectionType) {
         let width = self.frame.size.width - 6
         let height = self.frame.size.height - Consts.padding * 2 + 4
-        selectedView = UIImageView(frame: CGRect(x: Consts.padding, y: Consts.padding - 2, width: width, height: height))
-        selectedView?.backgroundColor = selectedColor
-        selectedView?.layer.cornerRadius = 6
-        self.addSubview(selectedView!)
-        self.sendSubviewToBack(selectedView!)
+        selectedImageView = UIImageView(frame: CGRect(x: Consts.padding, y: Consts.padding - 2, width: width, height: height))
+        selectedImageView?.layer.cornerRadius = 6
+        self.addSubview(selectedImageView!)
+        self.sendSubviewToBack(selectedImageView!)
         cellBackgroundView.isHidden = true
         
         label.textColor = selectedLabelColor
         switch selectionType {
         case .begining:
-            selectedView?.image = leftSelectionImage
+            selectedImageView?.image = leftSelectionImage
+            hideLeftVisiblePieceOfSelection()
         case .end:
-            selectedView?.image = rightSelectionImage
+            selectedImageView?.image = rightSelectionImage
+            hideRightVisiblePieceOfSelection()
         case .single:
-            selectedView?.image = nil
+            cellBackgroundView.backgroundColor = selectedColor
+            cellBackgroundView.isHidden = false
+            addShadow()
+            selectedImageView?.image = nil
         }
     }
     
-    @objc func hideLeftVisiblePieceOfSelection() {
+    private func hideLeftVisiblePieceOfSelection() {
         let width = self.frame.size.width
         let height = self.frame.size.height
         halfBackgroundView = UIView(frame: CGRect(x: 0, y: 0, width: width / 2, height: height))
@@ -133,7 +137,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         addRoundHighlightView()
     }
     
-    @objc func hideRightVisiblePieceOfSelection() {
+    private func hideRightVisiblePieceOfSelection() {
         let width = self.frame.size.width
         let height = self.frame.size.height
         halfBackgroundView = UIView(frame: CGRect(x: width / 2, y: 0, width: width / 2, height: height))
@@ -150,6 +154,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         roundHighlightView?.backgroundColor = highlightedColor
         self.addSubview(roundHighlightView!)
         self.sendSubviewToBack(roundHighlightView!)
+        cellBackgroundView.isHidden = true
     }
     
     @objc func highlight() {

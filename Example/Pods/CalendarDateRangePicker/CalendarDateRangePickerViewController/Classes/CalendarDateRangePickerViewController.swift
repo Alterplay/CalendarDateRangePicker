@@ -148,83 +148,13 @@ extension CalendarDateRangePickerViewController {
             }
             
             if selectedStartDate != nil && selectedEndDate != nil && isBefore(dateA: selectedStartDate!, dateB: date) && isBefore(dateA: date, dateB: selectedEndDate!) {
-                // Cell falls within selected range
-                if dayOfMonth == 1 {
-                    if #available(iOS 9.0, *) {
-                        if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
-                            cell.hideRightVisiblePieceOfSelection()
-                        }
-                        else{
-                            cell.hideLeftVisiblePieceOfSelection()
-                        }
-                    } else {
-                        // Use the previous technique
-                        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                            cell.hideRightVisiblePieceOfSelection()
-                        }
-                        else{
-                            cell.hideLeftVisiblePieceOfSelection()
-                        }
-                    }
-                } else if dayOfMonth == getNumberOfDaysInMonth(date: date) {
-                    if #available(iOS 9.0, *) {
-                        if UIView.appearance().semanticContentAttribute == .forceRightToLeft{
-                            cell.hideLeftVisiblePieceOfSelection()
-                        }
-                        else{
-                            cell.hideRightVisiblePieceOfSelection()
-                        }
-                    } else {
-                        // Use the previous technique
-                        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                            cell.hideLeftVisiblePieceOfSelection()
-                        }
-                        else{
-                            cell.hideRightVisiblePieceOfSelection()
-                        }
-                    }
-                } else {
-                    cell.highlight()
-                }
+                cell.highlight()
             } else if selectedStartDate != nil && areSameDay(dateA: date, dateB: selectedStartDate!) {
                 // Cell is selected start date
                 cell.select(with: selectedEndDate == nil ? .single : .begining)
-                if selectedEndDate != nil {
-                    if #available(iOS 9.0, *) {
-                        if UIView.appearance().semanticContentAttribute == .forceRightToLeft{
-                            cell.hideRightVisiblePieceOfSelection()
-                        }
-                        else{
-                            cell.hideLeftVisiblePieceOfSelection()
-                        }
-                    } else {
-                        // Use the previous technique
-                        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                            cell.hideRightVisiblePieceOfSelection()
-                        }
-                        else{
-                            cell.hideLeftVisiblePieceOfSelection()
-                        }
-                    }
-                }
             } else if selectedEndDate != nil && areSameDay(dateA: date, dateB: selectedEndDate!) {
                 cell.select(with: .end)
-                if #available(iOS 9.0, *) {
-                    if UIView.appearance().semanticContentAttribute == .forceRightToLeft{
-                        cell.hideLeftVisiblePieceOfSelection()
-                    }
-                    else{
-                        cell.hideRightVisiblePieceOfSelection()
-                    }
-                } else {
-                    // Use the previous technique
-                    if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                        cell.hideLeftVisiblePieceOfSelection()
-                    }
-                    else{
-                        cell.hideRightVisiblePieceOfSelection()
-                    }
-                }
+//               
             }
         }
         return cell
