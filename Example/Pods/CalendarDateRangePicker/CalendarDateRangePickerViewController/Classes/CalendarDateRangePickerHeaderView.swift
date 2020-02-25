@@ -10,6 +10,10 @@ import UIKit
 
 class CalendarDateRangePickerHeaderView: UICollectionReusableView {
     
+    private enum Consts {
+        static let padding: CGFloat = 5
+    }
+    
     @objc var monthLabel: UILabel!
     @objc var yearLabel: UILabel!
     @objc var monthFont = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize) {
@@ -45,8 +49,8 @@ class CalendarDateRangePickerHeaderView: UICollectionReusableView {
         addSubview(stack)
         stack.topAnchor.constraint(equalTo: topAnchor).isActive = true
         stack.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        stack.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        stack.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        stack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Consts.padding).isActive = true
+        stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Consts.padding).isActive = true
     }
     
     private func buildLabel(withFont font: UIFont?) -> UILabel {
