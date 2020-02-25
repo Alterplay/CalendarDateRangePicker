@@ -42,11 +42,12 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     @objc public var cellHighlightedColor = UIColor(white: 0.9, alpha: 1.0)
     @objc public static let defaultCellFontSize:CGFloat = 15.0
     @objc public static let defaultHeaderFontSize:CGFloat = 17.0
-    @objc public var cellFont:UIFont = UIFont(name: "HelveticaNeue", size: CalendarDateRangePickerViewController.defaultCellFontSize)!
+    @objc public var dayCellFont:UIFont = UIFont(name: "HelveticaNeue", size: CalendarDateRangePickerViewController.defaultCellFontSize)!
     @objc public var headerMonthFont: UIFont? = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize)!
     public var headerYearFont: UIFont? = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize)!
     public var headerMonthTextColor: UIColor? = .darkGray
     public var headerYearTextColor: UIColor? = .darkGray
+    public var defaultCalendarCellTextColor = UIColor.darkGray
     public var leftSelectionImage: UIImage?
     public var rightSelectionImage: UIImage?
 
@@ -126,12 +127,14 @@ extension CalendarDateRangePickerViewController {
         cell.highlightedLabelColor = self.highlightedLabelColor
         cell.disabledBackgroundColor = self.disabledCellColor
         cell.disabledLabelColor = self.disabledTextColor
-        cell.font = self.cellFont
+        cell.defaultTextColor = defaultCalendarCellTextColor
+        cell.font = self.dayCellFont
         cell.leftSelectionImage = leftSelectionImage
         cell.rightSelectionImage = rightSelectionImage
         cell.reset()
         let blankItems = getWeekday(date: getFirstDateForSection(section: indexPath.section)) - 1
         if indexPath.item < 7 {
+            cell.defaultTextColor = disabledTextColor
             cell.setText(getWeekdayLabel(weekday: indexPath.item + 1), dropShadow: false)
         } else if indexPath.item < 7 + blankItems {
             cell.setText("", dropShadow: false)

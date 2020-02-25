@@ -22,7 +22,11 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         static let padding: CGFloat = 5
     }
     
-    private let defaultTextColor = UIColor.darkGray
+    var defaultTextColor: UIColor! {
+        didSet {
+            label?.textColor = defaultTextColor
+        }
+    }
     var highlightedColor: UIColor!
     var font = UIFont(name: "HelveticaNeue", size: CalendarDateRangePickerViewController.defaultCellFontSize) {
         didSet {
