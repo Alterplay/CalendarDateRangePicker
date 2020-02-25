@@ -16,6 +16,10 @@ public protocol CalendarDateRangePickerViewControllerDelegate: class {
 }
 
 public class CalendarDateRangePickerViewController: UICollectionViewController {
+    public enum DayOfWeek {
+        case monday
+        case sunday
+    }
     
     @objc let cellReuseIdentifier = "CalendarDateRangePickerCell"
     @objc let headerReuseIdentifier = "CalendarDateRangePickerHeaderView"
@@ -53,6 +57,8 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     public var disabledCellColor = UIColor.gray
     public var disabledTextColor = UIColor.lightGray
     @objc public var titleText = "Select Dates"
+    
+    public var firstDayOfWeek: DayOfWeek = .monday
 
     
     override public func viewDidLoad() {
@@ -285,6 +291,14 @@ extension CalendarDateRangePickerViewController {
         var components = DateComponents()
         components.calendar = Calendar.current
         components.weekday = weekday
+        if(firstDayOfWeek == .monday) {
+            if weekday == 7 {
+                components.weekday = 1
+            }
+            else {
+                components.weekday = weekday + 1
+            }
+        }
         let date = Calendar.current.nextDate(after: Date(), matching: components, matchingPolicy: Calendar.MatchingPolicy.strict)
         if date == nil {
             return "E"
@@ -295,7 +309,18 @@ extension CalendarDateRangePickerViewController {
     }
     
     @objc func getWeekday(date: Date) -> Int {
-        return Calendar.current.dateComponents([.weekday], from: date).weekday!
+        let weekday = Calendar.current.dateComponents([.weekday], from: date).weekday!
+        if(firstDayOfWeek == .monday) {
+            if(weekday == 1){
+                return 7
+            }
+            else {
+                return weekday - 1
+            }
+        }
+        else {
+            return weekday
+        }
     }
     
     @objc func getNumberOfDaysInMonth(date: Date) -> Int {
