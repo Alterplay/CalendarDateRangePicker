@@ -10,6 +10,10 @@ import UIKit
 
 class CalendarDateRangePickerCell: UICollectionViewCell {
     
+    enum Edge {
+        case left, right, allVisible
+    }
+    
     enum SelectionType {
         case single, begining, end
     }
@@ -157,11 +161,22 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         cellBackgroundView.isHidden = true
     }
     
-    @objc func highlight() {
+    
+    
+    func highlight(edgeToRemove: Edge) {
         cellBackgroundView.isHidden = true
         highlightedView.backgroundColor = highlightedColor
         highlightedView.isHidden = false
         label.textColor = highlightedLabelColor
+        switch edgeToRemove {
+        case .allVisible:
+            highlightedView.frame.origin.x = 0
+            highlightedView.frame.size.width = frame.width
+        case .left:
+            highlightedView.frame.origin.x = Consts.padding
+        case .right:
+            highlightedView.frame.size.width = frame.width - Consts.padding
+        }
     }
     
     @objc func disable() {
