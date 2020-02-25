@@ -56,6 +56,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     @objc public var highlightedLabelColor = UIColor(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1.0)
     public var disabledCellColor = UIColor.gray
     public var disabledTextColor = UIColor.lightGray
+    public var calendarBackgroundColor = UIColor.white
     @objc public var titleText = "Select Dates"
     
     public var firstDayOfWeek: DayOfWeek = .monday
@@ -68,7 +69,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         
         collectionView?.dataSource = self
         collectionView?.delegate = self
-        collectionView?.backgroundColor = UIColor.white
+        collectionView?.backgroundColor = calendarBackgroundColor
         
         collectionView?.register(CalendarDateRangePickerCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
         collectionView?.register(CalendarDateRangePickerHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier)
