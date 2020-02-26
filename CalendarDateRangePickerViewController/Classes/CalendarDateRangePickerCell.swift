@@ -77,6 +77,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         highlightedFrame.origin.x = 0
         highlightedFrame.origin.y = Consts.padding
         highlightedFrame.size.height = frame.height - Consts.padding * 2
+        highlightedFrame.size.width = frame.width + 2
         highlightedView = UIView(frame: highlightedFrame)
         addSubview(highlightedView)
         
@@ -89,14 +90,13 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     }
     
     @objc func reset() {
-        self.backgroundColor = UIColor.clear
         label.textColor = defaultTextColor
         label.backgroundColor = UIColor.clear
         cellBackgroundView.backgroundColor = .white
         cellBackgroundView.isHidden = true
         highlightedView.isHidden = true
         highlightedView.frame.origin.x = 0
-        highlightedView.frame.size.width = frame.width
+        highlightedView.frame.size.width = frame.width + 2
         
         if selectedImageView != nil {
             selectedImageView?.removeFromSuperview()
@@ -165,7 +165,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         switch edgeToRemove {
         case .allVisible:
             highlightedView.frame.origin.x = 0
-            highlightedView.frame.size.width = frame.width
+            highlightedView.frame.size.width = frame.width + 5
         case .left:
             highlightedView.frame.origin.x = Consts.padding + additionalInset
             highlightedView.frame.size.width -= Consts.padding + additionalInset

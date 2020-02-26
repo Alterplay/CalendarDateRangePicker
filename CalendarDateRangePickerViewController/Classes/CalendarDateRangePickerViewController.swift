@@ -121,6 +121,7 @@ extension CalendarDateRangePickerViewController {
     override public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as! CalendarDateRangePickerCell
         
+        cell.backgroundColor = collectionView.backgroundColor
         cell.highlightedColor = self.cellHighlightedColor
         cell.selectedColor = self.selectedColor
         cell.selectedLabelColor = self.selectedLabelColor
