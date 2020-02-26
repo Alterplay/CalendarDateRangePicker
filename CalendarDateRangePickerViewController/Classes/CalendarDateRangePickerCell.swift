@@ -15,7 +15,9 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     }
     
     enum SelectionType {
-        case single, begining, end
+        case single
+        case begining(shouldRemoveHighlight: Bool)
+        case end(shouldRemoveHighlight: Bool)
     }
     
     private enum Consts {
@@ -117,20 +119,29 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         
         let additionalInset: CGFloat = 3
         switch selectionType {
-        case .begining:
+        case .begining(let shouldRemoveHighlight):
             let x = Consts.padding
             selectedImageView = UIImageView(frame: CGRect(x: x, y: y, width: width, height: height))
             selectedImageView?.image = leftSelectionImage
             self.addSubview(selectedImageView!)
             self.sendSubviewToBack(selectedImageView!)
-            highlight(edgeToRemove: .left, withAdditionalInset: additionalInset)
-        case .end:
+            if shouldRemoveHighlight {
+                highlightedView.isHidden = true
+            } else {
+                highlight(edgeToRemove: .left, withAdditionalInset: additionalInset)
+            }
+                
+        case .end(let shouldRemoveHighlight):
             let x = -Consts.padding + 6
             selectedImageView = UIImageView(frame: CGRect(x: x, y: y, width: width, height: height))
             selectedImageView?.image = rightSelectionImage
             self.addSubview(selectedImageView!)
             self.sendSubviewToBack(selectedImageView!)
-            highlight(edgeToRemove: .right, withAdditionalInset: additionalInset)
+            if shouldRemoveHighlight {
+                highlightedView.isHidden = true
+            } else {
+                highlight(edgeToRemove: .right, withAdditionalInset: additionalInset)
+            }
         case .single:
             cellBackgroundView.backgroundColor = selectedColor
             cellBackgroundView.isHidden = false

@@ -159,10 +159,10 @@ extension CalendarDateRangePickerViewController {
             
             if selectedStartDate != nil && selectedEndDate != nil && isBefore(dateA: selectedStartDate!, dateB: date) && isBefore(dateA: date, dateB: selectedEndDate!) {
                 var edge = CalendarDateRangePickerCell.Edge.allVisible
-                if indexPath.row % itemsPerRow == 0 {
+                if isLeftEdge(row: indexPath.row) {
                     edge = .left
                 }
-                else if (indexPath.row + 1) % itemsPerRow == 0 {
+                else if isRightEdge(row: indexPath.row) {
                     edge = .right
                 }
                 cell.highlight(edgeToRemove: edge)
@@ -172,11 +172,11 @@ extension CalendarDateRangePickerViewController {
                 if selectedEndDate == nil || areSameDay(dateA: selectedStartDate!, dateB: selectedEndDate!) {
                     selectionType = .single
                 } else {
-                    selectionType = .begining
+                    selectionType = .begining(shouldRemoveHighlight: isRightEdge(row: indexPath.row))
                 }
                 cell.select(with: selectionType)
             } else if selectedEndDate != nil && areSameDay(dateA: date, dateB: selectedEndDate!) {
-                cell.select(with: .end)
+                cell.select(with: .end(shouldRemoveHighlight: isLeftEdge(row: indexPath.row)))
             }
         }
         return cell
@@ -380,4 +380,11 @@ extension CalendarDateRangePickerViewController {
         return false
     }
     
+    private func isLeftEdge(row: Int) -> Bool {
+        return row % itemsPerRow == 0
+    }
+    
+    private func isRightEdge(row: Int) -> Bool {
+        return (row + 1) % itemsPerRow == 0
+    }
 }
