@@ -281,8 +281,8 @@ extension CalendarDateRangePickerViewController {
     
     @objc func getMonthLabel(date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM"
-        return dateFormatter.string(from: date)
+        dateFormatter.dateFormat = "LLLL"
+        return dateFormatter.string(from: date).capitalized
     }
     
     func getYearLabel(date: Date) -> String {
@@ -309,7 +309,7 @@ extension CalendarDateRangePickerViewController {
         }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEEEE"
-        return dateFormatter.string(from: date!)
+        return dateFormatter.string(from: date!).capitalized
     }
     
     @objc func getWeekday(date: Date) -> Int {
