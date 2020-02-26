@@ -93,6 +93,8 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         cellBackgroundView.backgroundColor = .white
         cellBackgroundView.isHidden = true
         highlightedView.isHidden = true
+        highlightedView.frame.origin.x = 0
+        highlightedView.frame.size.width = frame.width
         
         if selectedImageView != nil {
             selectedImageView?.removeFromSuperview()
