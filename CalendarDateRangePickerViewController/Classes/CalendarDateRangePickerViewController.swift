@@ -21,6 +21,10 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         case sunday
     }
     
+    public enum SelectionMode {
+        case single, range
+    }
+    
     @objc let cellReuseIdentifier = "CalendarDateRangePickerCell"
     @objc let headerReuseIdentifier = "CalendarDateRangePickerHeaderView"
     
@@ -61,6 +65,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     @objc public var titleText = "Select Dates"
     
     public var firstDayOfWeek: DayOfWeek = .monday
+    public var selectionMode: SelectionMode = .range
 
     
     override public func viewDidLoad() {
@@ -220,24 +225,23 @@ extension CalendarDateRangePickerViewController : UICollectionViewDelegateFlowLa
         }
         
         if selectedStartDate == nil {
-            selectedStartDate = cell.date
-            selectedStartCell = indexPath
-            delegate.didSelectStartDate(startDate: selectedStartDate)
+            selectStartDate(cell.date, withIndexPath: indexPath)
         } else if selectedEndDate == nil {
+            if selectionMode == .single {
+                selectStartDate(cell.date, withIndexPath: indexPath)
+                collectionView.reloadData()
+                return
+            }
             if isBeforeOrSame(dateA: selectedStartDate!, dateB: cell.date!) && !isBetween(selectedStartCell!, and: indexPath) {
                 selectedEndDate = cell.date
                 delegate.didSelectEndDate(endDate: selectedEndDate)
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
             } else {
                 // If a cell before the currently selected start date is selected then just set it as the new start date
-                selectedStartDate = cell.date
-                selectedStartCell = indexPath
-                delegate.didSelectStartDate(startDate: selectedStartDate)
+                selectStartDate(cell.date, withIndexPath: indexPath)
             }
         } else {
-            selectedStartDate = cell.date
-            selectedStartCell = indexPath
-            delegate.didSelectStartDate(startDate: selectedStartDate)
+            selectStartDate(cell.date, withIndexPath: indexPath)
             selectedEndDate = nil
         }
         collectionView.reloadData()
@@ -387,5 +391,11 @@ extension CalendarDateRangePickerViewController {
     
     private func isRightEdge(row: Int) -> Bool {
         return (row + 1) % itemsPerRow == 0
+    }
+    
+    private func selectStartDate(_ startDate: Date?, withIndexPath indexPath: IndexPath) {
+        selectedStartDate = startDate
+        selectedStartCell = indexPath
+        delegate.didSelectStartDate(startDate: selectedStartDate)
     }
 }
