@@ -152,7 +152,6 @@ extension CalendarDateRangePickerViewController {
 
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            let datePreFormatted = dateFormatter.string(from: date)
          
             if disabledDates != nil{
                 if (disabledDates?.contains(cell.date!))!{
@@ -175,8 +174,11 @@ extension CalendarDateRangePickerViewController {
             } else if selectedStartDate != nil && areSameDay(dateA: date, dateB: selectedStartDate!) {
                 // Cell is selected start date
                 let selectionType: CalendarDateRangePickerCell.SelectionType
-                if selectedEndDate == nil || areSameDay(dateA: selectedStartDate!, dateB: selectedEndDate!) {
+                if selectionMode == .single {
                     selectionType = .single
+                }
+                else if selectedEndDate == nil || areSameDay(dateA: selectedStartDate!, dateB: selectedEndDate!) {
+                    selectionType = .begining(shouldRemoveHighlight: true)
                 } else {
                     selectionType = .begining(shouldRemoveHighlight: isRightEdge(row: indexPath.row))
                 }
