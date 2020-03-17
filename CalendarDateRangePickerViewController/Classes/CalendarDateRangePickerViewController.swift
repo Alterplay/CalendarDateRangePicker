@@ -177,9 +177,13 @@ extension CalendarDateRangePickerViewController {
                 if selectionMode == .single {
                     selectionType = .single
                 }
-                else if selectedEndDate == nil || areSameDay(dateA: selectedStartDate!, dateB: selectedEndDate!) {
+                else if selectedEndDate == nil {
                     selectionType = .begining(shouldRemoveHighlight: true)
-                } else {
+                }
+                else if areSameDay(dateA: selectedStartDate!, dateB: selectedEndDate!) {
+                    selectionType = .single
+                }
+                else {
                     selectionType = .begining(shouldRemoveHighlight: isRightEdge(row: indexPath.row))
                 }
                 cell.select(with: selectionType)
