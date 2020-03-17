@@ -38,8 +38,8 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     
     @objc public var selectedStartDate: Date?
     @objc public var selectedEndDate: Date?
-    @objc var selectedStartCell: IndexPath?
-    @objc var selectedEndCell: IndexPath?
+    @objc public var selectedStartCell: IndexPath?
+    @objc public var selectedEndCell: IndexPath?
     
     @objc public var disabledDates: [Date]?
     
@@ -104,6 +104,13 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         delegate.didPickDateRange(startDate: selectedStartDate!, endDate: selectedEndDate!)
     }
     
+    public func scrollToSelectedRange() {
+        if self.selectionMode == .single {
+            self.scroll(to: self.selectedStartCell)
+        } else {
+            self.scroll(to: self.selectedEndCell)
+        }
+    }
 }
 
 extension CalendarDateRangePickerViewController {
@@ -240,6 +247,7 @@ extension CalendarDateRangePickerViewController : UICollectionViewDelegateFlowLa
             }
             if isBeforeOrSame(dateA: selectedStartDate!, dateB: cell.date!) && !isBetween(selectedStartCell!, and: indexPath) {
                 selectedEndDate = cell.date
+                selectedEndCell = indexPath
                 delegate.didSelectEndDate(endDate: selectedEndDate)
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
             } else {
@@ -249,6 +257,7 @@ extension CalendarDateRangePickerViewController : UICollectionViewDelegateFlowLa
         } else {
             selectStartDate(cell.date, withIndexPath: indexPath)
             selectedEndDate = nil
+            selectedEndCell = nil
         }
         collectionView.reloadData()
     }
@@ -403,5 +412,17 @@ extension CalendarDateRangePickerViewController {
         selectedStartDate = startDate
         selectedStartCell = indexPath
         delegate.didSelectStartDate(startDate: selectedStartDate)
+    }
+    
+    private func scroll(to indexPath: IndexPath?) {
+        guard let indexPath = indexPath else { return }
+            
+        if let cell = collectionView.cellForItem(at: indexPath) {
+            if cell.frame.maxY - collectionView.contentOffset.y > collectionView.frame.height - collectionView.contentInset.bottom {
+                collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+            }
+        } else {
+            collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+        }
     }
 }
