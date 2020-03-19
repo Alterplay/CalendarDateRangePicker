@@ -119,7 +119,6 @@ extension CalendarDateRangePickerViewController {
     
     override public func numberOfSections(in collectionView: UICollectionView) -> Int {
         let difference = Calendar.current.dateComponents([.month, .day], from: minimumDate, to: maximumDate)
-        print(difference)
         var month = difference.month! + 1
         if difference.day! > 0 {
             month += 1
