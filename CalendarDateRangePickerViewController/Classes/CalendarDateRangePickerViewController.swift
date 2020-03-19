@@ -118,8 +118,13 @@ extension CalendarDateRangePickerViewController {
     // UICollectionViewDataSource
     
     override public func numberOfSections(in collectionView: UICollectionView) -> Int {
-        let difference = Calendar.current.dateComponents([.month], from: minimumDate, to: maximumDate)
-        return difference.month! + 1
+        let difference = Calendar.current.dateComponents([.month, .day], from: minimumDate, to: maximumDate)
+        print(difference)
+        var month = difference.month! + 1
+        if difference.day! > 0 {
+            month += 1
+        }
+        return month
     }
     
     override public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -165,7 +170,7 @@ extension CalendarDateRangePickerViewController {
                     cell.disable()
                 }
             }
-            if isBefore(dateA: date, dateB: minimumDate) {
+            if isBefore(dateA: date, dateB: minimumDate) || isAfter(dateA: date, dateB: maximumDate) {
                 cell.disable()
             }
             
@@ -227,7 +232,7 @@ extension CalendarDateRangePickerViewController : UICollectionViewDelegateFlowLa
         if cell.date == nil {
             return
         }
-        if isBefore(dateA: cell.date!, dateB: minimumDate){
+        if isBefore(dateA: cell.date!, dateB: minimumDate) || isAfter(dateA: cell.date!, dateB: maximumDate) {
             return
         }
         
@@ -363,6 +368,10 @@ extension CalendarDateRangePickerViewController {
     
     @objc func isBefore(dateA: Date, dateB: Date) -> Bool {
         return Calendar.current.compare(dateA, to: dateB, toGranularity: .day) == ComparisonResult.orderedAscending
+    }
+    
+    private func isAfter(dateA: Date, dateB: Date) -> Bool {
+        return Calendar.current.compare(dateA, to: dateB, toGranularity: .day) == ComparisonResult.orderedDescending
     }
     
     private func isBeforeOrSame(dateA: Date, dateB: Date) -> Bool {
