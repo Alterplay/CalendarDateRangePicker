@@ -63,6 +63,12 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         setup()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        date = nil
+    }
+    
     @objc func setup() {
         cellBackgroundView = UIView()
         cellBackgroundView.translatesAutoresizingMaskIntoConstraints = false
