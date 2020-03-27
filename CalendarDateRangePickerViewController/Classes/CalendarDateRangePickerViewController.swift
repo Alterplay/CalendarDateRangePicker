@@ -42,6 +42,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     @objc public var selectedEndCell: IndexPath?
     
     @objc public var disabledDates: [Date]?
+    public var occupiedDate: Date?
     
     @objc public var cellHighlightedColor = UIColor(white: 0.9, alpha: 1.0)
     @objc public static let defaultCellFontSize:CGFloat = 15.0
@@ -201,6 +202,10 @@ extension CalendarDateRangePickerViewController {
                 cell.select(with: selectionType)
             } else if selectedEndDate != nil && areSameDay(dateA: date, dateB: selectedEndDate!) {
                 cell.select(with: .end(shouldRemoveHighlight: isLeftEdge(row: indexPath.row)))
+            } else if let occupiedDate = occupiedDate,
+                areSameDay(dateA: date, dateB: occupiedDate) {
+                cell.selectedColor = selectedColor.withAlphaComponent(0.4)
+                cell.select(with: .single)
             }
         }
         return cell
