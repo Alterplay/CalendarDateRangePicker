@@ -98,10 +98,10 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     
 }
 
+// MARK: - UICollectionViewDataSource
+
 extension CalendarDateRangePickerViewController {
-    
-    // UICollectionViewDataSource
-    
+
     override public func numberOfSections(in collectionView: UICollectionView) -> Int {
         let difference = Calendar.current.dateComponents([.month], from: minimumDate, to: maximumDate)
         return difference.month! + 1
@@ -272,7 +272,7 @@ extension CalendarDateRangePickerViewController {
     
     @objc func getMonthLabel(date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM"
+        dateFormatter.dateFormat = "MMMM yyyy"
         return dateFormatter.string(from: date)
     }
 
@@ -280,7 +280,7 @@ extension CalendarDateRangePickerViewController {
         var components = DateComponents()
         components.calendar = Calendar.current
         components.weekday = weekday
-        if(firstDayOfWeek == .monday) {
+        if firstDayOfWeek == .monday {
             if weekday == 7 {
                 components.weekday = 1
             }
@@ -299,16 +299,14 @@ extension CalendarDateRangePickerViewController {
     
     @objc func getWeekday(date: Date) -> Int {
         let weekday = Calendar.current.dateComponents([.weekday], from: date).weekday!
-        if(firstDayOfWeek == .monday) {
-            if(weekday == 1){
+        if firstDayOfWeek == .monday {
+            if weekday == 1 {
                 return 7
+            } else {
+				return weekday - 1
             }
-            else {
-                return weekday - 1
-            }
-        }
-        else {
-            return weekday
+        } else {
+			return weekday
         }
     }
     
