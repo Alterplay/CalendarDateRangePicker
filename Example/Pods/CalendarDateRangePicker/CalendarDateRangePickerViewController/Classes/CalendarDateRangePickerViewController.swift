@@ -43,11 +43,8 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     @objc public static let defaultCellFontSize:CGFloat = 15.0
     @objc public static let defaultHeaderFontSize:CGFloat = 17.0
     @objc public var dayCellFont:UIFont = UIFont(name: "HelveticaNeue", size: CalendarDateRangePickerViewController.defaultCellFontSize)!
-    @objc public var headerMonthFont: UIFont? = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize)!
-    public var headerYearFont: UIFont? = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize)!
-    public var headerMonthTextColor: UIColor? = .darkGray
-    public var headerYearTextColor: UIColor? = .darkGray
-    public var defaultCalendarCellTextColor = UIColor.darkGray
+	@objc public var headerFont:UIFont = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize)!
+	public var defaultCalendarCellTextColor = UIColor.darkGray
     public var leftSelectionImage: UIImage?
     public var rightSelectionImage: UIImage?
 
@@ -146,8 +143,7 @@ extension CalendarDateRangePickerViewController {
 
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            let datePreFormatted = dateFormatter.string(from: date)
-         
+
             if disabledDates != nil{
                 if (disabledDates?.contains(cell.date!))!{
                     cell.disable()
@@ -186,13 +182,8 @@ extension CalendarDateRangePickerViewController {
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as! CalendarDateRangePickerHeaderView
-            let date = getFirstDateForSection(section: indexPath.section)
-            headerView.monthLabel.text = getMonthLabel(date: date)
-            headerView.yearLabel.text = getYearLabel(date: date)
-            headerView.monthFont = headerMonthFont
-            headerView.yearFont = headerYearFont
-            headerView.monthLabel.textColor = headerMonthTextColor
-            headerView.yearLabel.textColor = headerYearTextColor
+			headerView.label.text = getMonthLabel(date: getFirstDateForSection(section: indexPath.section))
+			headerView.font = headerFont
             return headerView
         default:
             fatalError("Unexpected element kind")
@@ -284,13 +275,7 @@ extension CalendarDateRangePickerViewController {
         dateFormatter.dateFormat = "MMMM"
         return dateFormatter.string(from: date)
     }
-    
-    func getYearLabel(date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy"
-        return dateFormatter.string(from: date)
-    }
-    
+
     @objc func getWeekdayLabel(weekday: Int) -> String {
         var components = DateComponents()
         components.calendar = Calendar.current
