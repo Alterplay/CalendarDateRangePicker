@@ -22,6 +22,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     
     private enum Consts {
         static let padding: CGFloat = 5
+        static let cornerRadius: CGFloat = 6
     }
     
     var defaultTextColor: UIColor! {
@@ -103,6 +104,8 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         highlightedView.isHidden = true
         highlightedView.frame.origin.x = 0
         highlightedView.frame.size.width = frame.width + 2
+        highlightedView.layer.cornerRadius = 0
+        highlightedView.layer.maskedCorners = []
         
         if selectedImageView != nil {
             selectedImageView?.removeFromSuperview()
@@ -175,7 +178,11 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         case .left:
             highlightedView.frame.origin.x = Consts.padding + additionalInset
             highlightedView.frame.size.width -= Consts.padding + additionalInset
+            highlightedView.layer.cornerRadius = Consts.cornerRadius
+            highlightedView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         case .right:
+            highlightedView.layer.cornerRadius = Consts.cornerRadius
+            highlightedView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
             highlightedView.frame.size.width = frame.width - Consts.padding - additionalInset
         }
     }
