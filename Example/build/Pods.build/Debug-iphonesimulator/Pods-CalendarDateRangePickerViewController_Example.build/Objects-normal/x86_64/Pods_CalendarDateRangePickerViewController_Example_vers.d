@@ -1,0 +1,2 @@
+dependencies: \
+  /Users/shuttleswort/Documents/Alty/Fork/CalendarDateRangePicker/Example/build/Pods.build/Debug-iphonesimulator/Pods-CalendarDateRangePickerViewController_Example.build/DerivedSources/Pods_CalendarDateRangePickerViewController_Example_vers.c

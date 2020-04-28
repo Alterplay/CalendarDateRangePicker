@@ -22,7 +22,6 @@ Pod::Spec.new do |s|
   # ――― Platform Specifics ―――――――――――――――――――――――――――――――――――――――――――――――――――――――
   s.platform     = :ios
   s.ios.deployment_target = "12.0"
-  s.swift_version = "5"
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   s.source       = { :git => "https://github.com/Ljuka/CalendarDateRangePicker.git" }
 
