@@ -15,7 +15,7 @@ public protocol CalendarDateRangePickerViewControllerDelegate: class {
     func didSelectEndDate(endDate: Date)
 }
 
-extension CalendarDateRangePickerViewControllerDelegate {
+public extension CalendarDateRangePickerViewControllerDelegate {
 	func didCancelPickingDateRange() { }
 	func didPickDateRange(startDate: Date, endDate: Date) { }
 }
