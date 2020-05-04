@@ -195,6 +195,11 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
             cellBackgroundView.isHidden = true
         }
     }
+
+	func applyCurrentDateBorder(_ isApply: Bool) {
+		cellBackgroundView.layer.borderWidth = isApply ? 1 : 0
+		cellBackgroundView.layer.borderColor = isApply ? selectedColor.cgColor : disabledBackgroundColor.cgColor
+	}
 }
 
 // MARK: - Private
