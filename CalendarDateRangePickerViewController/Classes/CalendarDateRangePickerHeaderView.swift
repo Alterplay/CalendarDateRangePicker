@@ -3,7 +3,6 @@
 //  CalendarDateRangePickerViewController
 //
 //  Created by Miraan on 15/10/2017.
-//  Improved and maintaining by Ljuka
 //  Copyright © 2017 Miraan. All rights reserved.
 //
 
@@ -12,10 +11,8 @@ import UIKit
 class CalendarDateRangePickerHeaderView: UICollectionReusableView {
 
     @objc var label: UILabel!
-    @objc var font = UIFont(name: "HelveticaNeue-Light", size: CalendarDateRangePickerViewController.defaultHeaderFontSize) {
-        didSet {
-            label?.font = font
-        }
+	@objc var font: UIFont? = .systemFont(ofSize: 15) {
+        didSet { label?.font = font }
     }
 
     override init(frame: CGRect) {
@@ -24,7 +21,7 @@ class CalendarDateRangePickerHeaderView: UICollectionReusableView {
     }
 
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)!
+        super.init(coder: aDecoder)
         initLabel()
     }
 
@@ -32,9 +29,9 @@ class CalendarDateRangePickerHeaderView: UICollectionReusableView {
         label = UILabel(frame: frame)
         label.center = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
         label.font = font
-        label.textColor = UIColor.darkGray
-        label.textAlignment = NSTextAlignment.center
-        self.addSubview(label)
+        label.textColor = .black
+        label.textAlignment = .center
+        addSubview(label)
     }
 
 }

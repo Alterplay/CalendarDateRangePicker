@@ -1,0 +1,7 @@
+version: "Apple Swift version 5.2.2 (swiftlang-1103.0.32.6 clang-1103.0.32.51)"
+options: "ee2433ad169eba27e95f174742f93b73"
+build_time: [1588077523, 806194000]
+inputs:
+  "/Users/shuttleswort/Documents/Alty/Fork/CalendarDateRangePicker/Example/Pods/CalendarDateRangePicker/CalendarDateRangePickerViewController/Classes/CalendarDateRangePickerCell.swift": [1587974796, 498904262]
+  "/Users/shuttleswort/Documents/Alty/Fork/CalendarDateRangePicker/Example/Pods/CalendarDateRangePicker/CalendarDateRangePickerViewController/Classes/CalendarDateRangePickerHeaderView.swift": [1588077461, 527243867]
+  "/Users/shuttleswort/Documents/Alty/Fork/CalendarDateRangePicker/Example/Pods/CalendarDateRangePicker/CalendarDateRangePickerViewController/Classes/CalendarDateRangePickerViewController.swift": [1588077461, 527704212]

@@ -1,0 +1,10 @@
+framework module CalendarDateRangePicker {
+  umbrella header "CalendarDateRangePicker-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+module CalendarDateRangePicker.__Swift {
+    exclude header "CalendarDateRangePicker-Swift.h"
+}
