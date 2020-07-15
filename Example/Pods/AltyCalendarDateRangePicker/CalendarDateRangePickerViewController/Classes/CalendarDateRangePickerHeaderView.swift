@@ -3,7 +3,6 @@
 //  CalendarDateRangePickerViewController
 //
 //  Created by Miraan on 15/10/2017.
-//  Improved and maintaining by Ljuka
 //  Copyright © 2017 Miraan. All rights reserved.
 //
 

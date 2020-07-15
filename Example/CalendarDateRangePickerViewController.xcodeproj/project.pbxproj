@@ -281,11 +281,11 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-CalendarDateRangePickerViewController_Example/Pods-CalendarDateRangePickerViewController_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/CalendarDateRangePicker/CalendarDateRangePicker.framework",
+				"${BUILT_PRODUCTS_DIR}/AltyCalendarDateRangePicker/AltyCalendarDateRangePicker.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CalendarDateRangePicker.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AltyCalendarDateRangePicker.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

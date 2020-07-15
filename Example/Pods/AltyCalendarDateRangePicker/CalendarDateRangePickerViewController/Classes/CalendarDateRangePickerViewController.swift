@@ -219,6 +219,7 @@ extension CalendarDateRangePickerViewController {
                 cell.selectedColor = selectedColor.withAlphaComponent(0.4)
                 cell.select(with: .single)
             }
+			cell.applyCurrentDateBorder(isToday(date: date))
         }
         return cell
     }
@@ -389,6 +390,10 @@ extension CalendarDateRangePickerViewController {
     private func isBeforeOrSame(dateA: Date, dateB: Date) -> Bool {
         return isBefore(dateA: dateA, dateB: dateB) || Calendar.current.isDate(dateA, inSameDayAs: dateB)
     }
+
+	private func isToday(date: Date) -> Bool {
+		return Calendar.current.isDateInToday(date)
+	}
     
     @objc func isBetween(_ startDateCellIndex: IndexPath, and endDateCellIndex: IndexPath) -> Bool {
         

@@ -1,0 +1,6 @@
+framework module AltyCalendarDateRangePicker {
+  umbrella header "AltyCalendarDateRangePicker-umbrella.h"
+
+  export *
+  module * { export * }
+}
