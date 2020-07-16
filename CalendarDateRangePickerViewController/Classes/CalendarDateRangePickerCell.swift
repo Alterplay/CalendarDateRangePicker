@@ -68,6 +68,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     }
     
     @objc func setup() {
+        clipsToBounds = true
         cellBackgroundView = UIView()
         cellBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(cellBackgroundView)
