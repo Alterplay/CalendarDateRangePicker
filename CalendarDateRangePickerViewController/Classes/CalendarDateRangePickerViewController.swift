@@ -103,17 +103,19 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
 
 	public func reloadAndScrollToMid() {
 		collectionView.reloadData()
-		DispatchQueue.main.async {
-			guard let selectedEndDate = self.selectedEndDate, let minDate = self.minimumDate else {
-				let section = self.numberOfSection() / 2 - 1
-				let numberOfRows = self.collectionView.numberOfItems(inSection: section) - 1
-				self.collectionView.scrollToItem(at: IndexPath(row: numberOfRows, section: section), at: .top, animated: false)
-				return
-			}
-			guard let section = Calendar.current.dateComponents([.month, .day], from: minDate, to: selectedEndDate).month else { return }
-			self.selectedEndCell = IndexPath(row: 0, section: section + 2)
-			self.scroll(to: self.selectedEndCell, animated: false)
-		}
+        DispatchQueue.main.async {
+            guard let date = self.selectedStartDate else {
+                let section = self.numberOfSection() / 2 - 1
+                let numberOfRows = self.collectionView.numberOfItems(inSection: section) - 1
+                self.collectionView.scrollToItem(at: IndexPath(row: numberOfRows, section: section), at: .top, animated: false)
+                return
+            }
+            guard let minDate = self.minimumDate else { return }
+            let calendar = Calendar.current
+            let yearDiff = calendar.component(.year, from: date) - calendar.component(.year, from: minDate)
+            let selectedMonth = calendar.component(.month, from: date) + (yearDiff * 12) - (calendar.component(.month, from: Date()))
+            self.collectionView.scrollToItem(at: IndexPath(row: calendar.component(.day, from: date), section: selectedMonth), at: .centeredVertically, animated: false)
+        }
 	}
 
     @objc func didTapCancel() {
