@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double CalendarDateRangePickerVersionNumber;
-FOUNDATION_EXPORT const unsigned char CalendarDateRangePickerVersionString[];
+FOUNDATION_EXPORT double AltyCalendarDateRangePickerVersionNumber;
+FOUNDATION_EXPORT const unsigned char AltyCalendarDateRangePickerVersionString[];
 

@@ -3,6 +3,7 @@
 //  CalendarDateRangePickerViewController
 //
 //  Created by Miraan on 15/10/2017.
+//  Improved and maintaining by Ljuka
 //  Copyright © 2017 Miraan. All rights reserved.
 //
 
@@ -29,12 +30,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     public enum SelectionMode {
         case single, range
     }
-    
-    public enum ScrollPosition {
-        case top
-        case mid
-    }
-    
+
     @objc let cellReuseIdentifier = "CalendarDateRangePickerCell"
     @objc let headerReuseIdentifier = "CalendarDateRangePickerHeaderView"
     
@@ -92,7 +88,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         collectionView?.register(CalendarDateRangePickerCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
         collectionView?.register(CalendarDateRangePickerHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier)
         collectionView?.contentInset = collectionViewInsets
-        
+
         if minimumDate == nil {
             minimumDate = Date()
         }
@@ -105,32 +101,29 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         navigationItem.rightBarButtonItem?.isEnabled = selectedStartDate != nil && selectedEndDate != nil
     }
     
-    public func reloadAndScroll(to scrollPosition: ScrollPosition) {
+    public func reloadAndScrollToDate() {
         collectionView.reloadData()
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self = self, let minDate = self.minimumDate else { return }
+            let calendar = Calendar.current
             
-            guard let selectedEndDate = self.selectedEndDate, let minDate = self.minimumDate else {
-                let section: Int = {
-                    switch scrollPosition {
-                    case .top: return 0
-                    case .mid: return self.numberOfSection() / 2 - 1
-                    }
-                }()
-                let numberOfRows = self.collectionView.numberOfItems(inSection: section) - 1
-                self.collectionView.scrollToItem(at: IndexPath(row: numberOfRows, section: section), at: .top, animated: false)
-                return
+            if let date = self.selectedStartDate {
+                let yearDiff = calendar.component(.year, from: date) - calendar.component(.year, from: minDate)
+                let selectedMonth = calendar.component(.month, from: date) + (yearDiff * 12) - (calendar.component(.month, from: Date()))
+                self.collectionView.scrollToItem(at: IndexPath(row: calendar.component(.day, from: date), section: selectedMonth), at: .centeredVertically, animated: false)
+            } else {
+                let today = Date()
+                let yearDiff = calendar.component(.year, from: today) - calendar.component(.year, from: minDate)
+                let selectedMonth = min(calendar.component(.month, from: today) + (yearDiff * 12), self.numberOfSection() - 1) // Workaround
+                self.collectionView.scrollToItem(at: IndexPath(row: calendar.component(.day, from: today), section: selectedMonth), at: .centeredVertically, animated: false)
             }
-            guard let section = Calendar.current.dateComponents([.month, .day], from: minDate, to: selectedEndDate).month else { return }
-            self.selectedEndCell = IndexPath(row: 0, section: section + 2)
-            self.scroll(to: self.selectedEndCell, animated: false)
         }
     }
 
     @objc func didTapCancel() {
         delegate?.didCancelPickingDateRange()
     }
-    
+
     @objc func didTapDone() {
         if selectedStartDate == nil || selectedEndDate == nil {
             return
@@ -154,7 +147,7 @@ extension CalendarDateRangePickerViewController {
     override public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return numberOfSection()
     }
-    
+
     override public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let firstDateForSection = getFirstDateForSection(section: section)
         let weekdayRowItems = 7
@@ -162,7 +155,7 @@ extension CalendarDateRangePickerViewController {
         let daysInMonth = getNumberOfDaysInMonth(date: firstDateForSection)
         return weekdayRowItems + blankItems + daysInMonth
     }
-    
+
     override public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as! CalendarDateRangePickerCell
         
@@ -201,7 +194,7 @@ extension CalendarDateRangePickerViewController {
             if isBefore(dateA: date, dateB: minimumDate!) || isAfter(dateA: date, dateB: maximumDate!) {
                 cell.disable()
             }
-            
+
             if selectedStartDate != nil && selectedEndDate != nil && isBefore(dateA: selectedStartDate!, dateB: date) && isBefore(dateA: date, dateB: selectedEndDate!) {
                 var edge = CalendarDateRangePickerCell.Edge.allVisible
                 if isLeftEdge(row: indexPath.row) {
@@ -234,7 +227,7 @@ extension CalendarDateRangePickerViewController {
         }
         return cell
     }
-    
+
     override public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         switch kind {
         case UICollectionView.elementKindSectionHeader:
@@ -246,7 +239,7 @@ extension CalendarDateRangePickerViewController {
             fatalError("Unexpected element kind")
         }
     }
-    
+
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
@@ -267,7 +260,7 @@ extension CalendarDateRangePickerViewController: UICollectionViewDelegateFlowLay
                 return
             }
         }
-        
+
         if selectedStartDate == nil {
             selectStartDate(cell.date, withIndexPath: indexPath)
         } else if selectedEndDate == nil {
@@ -293,7 +286,7 @@ extension CalendarDateRangePickerViewController: UICollectionViewDelegateFlowLay
         }
         collectionView.reloadData()
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -302,35 +295,35 @@ extension CalendarDateRangePickerViewController: UICollectionViewDelegateFlowLay
         let itemWidth = floor(availableWidth / CGFloat(itemsPerRow))
         return CGSize(width: itemWidth, height: itemWidth)
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: view.frame.size.width, height: 50)
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 5
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-    
+
 }
 
 extension CalendarDateRangePickerViewController {
-    
+
     // Helper functions
-    
+
     @objc func getFirstDate() -> Date {
         var components = Calendar.current.dateComponents([.month, .year], from: minimumDate!)
         components.day = 1
         return Calendar.current.date(from: components)!
     }
-    
+
     @objc func getFirstDateForSection(section: Int) -> Date {
         return Calendar.current.date(byAdding: .month, value: section, to: getFirstDate())!
     }
-    
+
     @objc func getMonthLabel(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM  yyyy"
@@ -342,7 +335,7 @@ extension CalendarDateRangePickerViewController {
         dateFormatter.dateFormat = "yyyy"
         return dateFormatter.string(from: date)
     }
-    
+
     @objc func getWeekdayLabel(weekday: Int) -> String {
         var components = DateComponents()
         components.calendar = Calendar.current
@@ -362,7 +355,7 @@ extension CalendarDateRangePickerViewController {
         dateFormatter.dateFormat = "E"
         return dateFormatter.string(from: date!).capitalized
     }
-    
+
     @objc func getWeekday(date: Date) -> Int {
         let weekday = Calendar.current.dateComponents([.weekday], from: date).weekday!
         if firstDayOfWeek == .monday {
@@ -375,21 +368,21 @@ extension CalendarDateRangePickerViewController {
             return weekday
         }
     }
-    
+
     @objc func getNumberOfDaysInMonth(date: Date) -> Int {
         return Calendar.current.range(of: .day, in: .month, for: date)!.count
     }
-    
+
     @objc func getDate(dayOfMonth: Int, section: Int) -> Date {
         var components = Calendar.current.dateComponents([.month, .year], from: getFirstDateForSection(section: section))
         components.day = dayOfMonth
         return Calendar.current.date(from: components)!
     }
-    
+
     @objc func areSameDay(dateA: Date, dateB: Date) -> Bool {
         return Calendar.current.compare(dateA, to: dateB, toGranularity: .day) == ComparisonResult.orderedSame
     }
-    
+
     @objc func isBefore(dateA: Date, dateB: Date) -> Bool {
         return Calendar.current.compare(dateA, to: dateB, toGranularity: .day) == ComparisonResult.orderedAscending
     }
@@ -411,7 +404,7 @@ extension CalendarDateRangePickerViewController {
         if disabledDates == nil {
             return false
         }
-        
+
         var index = startDateCellIndex.row
         var section = startDateCellIndex.section
         var currentIndexPath: IndexPath
@@ -427,7 +420,7 @@ extension CalendarDateRangePickerViewController {
                 currentIndexPath = IndexPath(row: index, section: section)
                 cell = collectionView?.cellForItem(at: currentIndexPath) as? CalendarDateRangePickerCell
             }
-            
+
             if cell != nil && (disabledDates?.contains((cell!.date)!))! {
                 return true
             }

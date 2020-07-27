@@ -3,6 +3,7 @@
 //  CalendarDateRangePickerViewController
 //
 //  Created by Miraan on 15/10/2017.
+//  Improved and maintaining by Ljuka
 //  Copyright © 2017 Miraan. All rights reserved.
 //
 
@@ -33,7 +34,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     var font = UIFont(name: "HelveticaNeue", size: CalendarDateRangePickerViewController.defaultCellFontSize) {
         didSet { label?.font = font }
     }
-    
+
     @objc var selectedColor: UIColor!
     @objc var selectedLabelColor: UIColor!
     @objc var highlightedLabelColor: UIColor!
@@ -55,7 +56,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         super.init(frame: frame)
         setup()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
@@ -67,6 +68,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     }
     
     @objc func setup() {
+        clipsToBounds = true
         cellBackgroundView = UIView()
         cellBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(cellBackgroundView)
@@ -91,7 +93,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         label.textAlignment = NSTextAlignment.center
         addSubview(label)
     }
-    
+
     @objc func reset() {
         label.textColor = defaultTextColor
         label.backgroundColor = UIColor.clear
@@ -181,7 +183,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
             highlightedView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         }
     }
-    
+
     @objc func disable() {
         cellBackgroundView.backgroundColor = disabledBackgroundColor
         label.textColor = disabledLabelColor
