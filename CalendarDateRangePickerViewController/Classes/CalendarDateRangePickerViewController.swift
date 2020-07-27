@@ -114,7 +114,8 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
             } else {
                 let today = Date()
                 let yearDiff = calendar.component(.year, from: today) - calendar.component(.year, from: minDate)
-                let selectedMonth = min(calendar.component(.month, from: today) + (yearDiff * 12), self.numberOfSection() - 1) // Workaround
+                let selectedMonth = min(calendar.component(.month, from: today) + (yearDiff * 12) - calendar.component(.month, from: minDate),
+                                        self.numberOfSection() - 1) // Workaround
                 self.collectionView.scrollToItem(at: IndexPath(row: calendar.component(.day, from: today), section: selectedMonth), at: .centeredVertically, animated: false)
             }
         }
