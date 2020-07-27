@@ -101,7 +101,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         navigationItem.rightBarButtonItem?.isEnabled = selectedStartDate != nil && selectedEndDate != nil
     }
     
-    public func reloadAndScrollToDate() {
+    public func reloadAndScrollToMid() {
         collectionView.reloadData()
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let minDate = self.minimumDate else { return }
