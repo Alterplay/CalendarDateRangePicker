@@ -105,19 +105,13 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         collectionView.reloadData()
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let minDate = self.minimumDate else { return }
-            let calendar = Calendar.current
             
-            if let date = self.selectedStartDate {
-                let yearDiff = calendar.component(.year, from: date) - calendar.component(.year, from: minDate)
-                let selectedMonth = calendar.component(.month, from: date) + (yearDiff * 12) - (calendar.component(.month, from: Date()))
-                self.collectionView.scrollToItem(at: IndexPath(row: calendar.component(.day, from: date), section: selectedMonth), at: .centeredVertically, animated: false)
-            } else {
-                let today = Date()
-                let yearDiff = calendar.component(.year, from: today) - calendar.component(.year, from: minDate)
-                let selectedMonth = min(calendar.component(.month, from: today) + (yearDiff * 12) - calendar.component(.month, from: minDate),
-                                        self.numberOfSection() - 1) // Workaround
-                self.collectionView.scrollToItem(at: IndexPath(row: calendar.component(.day, from: today), section: selectedMonth), at: .centeredVertically, animated: false)
-            }
+            let calendar = Calendar.current
+            let dateScrollTo = self.selectedStartDate ?? Date()
+            let yearDiff = calendar.component(.year, from: dateScrollTo) - calendar.component(.year, from: minDate)
+            let selectedMonth = calendar.component(.month, from: dateScrollTo) + (yearDiff * 12) - (calendar.component(.month, from: minDate))
+            let dateIndexPath = IndexPath(row: calendar.component(.day, from: dateScrollTo), section: selectedMonth)
+            self.collectionView.scrollToItem(at: dateIndexPath, at: .centeredVertically, animated: false)
         }
     }
 
