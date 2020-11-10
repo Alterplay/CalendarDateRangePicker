@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   s.name         = "AltyCalendarDateRangePicker"
-  s.version      = "1.7.6"
+  s.version      = "1.7.7"
   s.summary      = "A calendar date range picker view controller in Swift for iOS."
 
   s.description  = <<-DESC
