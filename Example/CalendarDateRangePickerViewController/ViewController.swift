@@ -37,6 +37,11 @@ class ViewController: UIViewController {
         dateRangePickerViewController.selectedColor = UIColor.clear
         dateRangePickerViewController.selectedLabelColor = .white
         dateRangePickerViewController.titleText = "Select Date Range"
+        
+        dateRangePickerViewController.weekdayCellColor = .black
+        dateRangePickerViewController.weekdayCellTextColor = .red
+        dateRangePickerViewController.weekdayHeaderFormat = .long
+        dateRangePickerViewController.weekdayHeaderStyle = .floating
         let navigationController = UINavigationController(rootViewController: dateRangePickerViewController)
         self.navigationController?.present(navigationController, animated: true, completion: nil)
     }

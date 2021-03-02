@@ -171,9 +171,15 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         }
     }
     
-    public var weekdayHeaderStyle: WeekdayHeaderStyle = .fixed {
+    public var weekdayHeaderStyle: WeekdayHeaderStyle = .floating {
         didSet {
             updateWeekdayHeaderStyle()
+        }
+    }
+    
+    public var weekdayHeaderFormat: WeekdayHeaderFormat = .long {
+        didSet {
+            updateWeekdayHeaderFormat()
         }
     }
     
@@ -241,6 +247,14 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         case fixed
     }
  
+    public enum WeekdayHeaderFormat: String {
+        /// Short format for header titles: [M, T, W, T, F, S, S]
+        case short = "EEEEE"
+        
+        /// Long format for header titles: [Mon, Tue, Wed, Thu, Fri, Sat, Sun]
+        case long = "E"
+    }
+    
     public enum DayOfWeek {
         case monday
         case sunday
@@ -462,13 +476,12 @@ extension CalendarDateRangePickerViewController {
                 components.weekday = weekday + 1
             }
         }
-        let date = Calendar.current.nextDate(after: Date(), matching: components, matchingPolicy: Calendar.MatchingPolicy.strict)
-        if date == nil {
-            return "E"
+        guard let date = Calendar.current.nextDate(after: Date(), matching: components, matchingPolicy: Calendar.MatchingPolicy.strict) else {
+            return weekdayHeaderFormat.rawValue
         }
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E"
-        return dateFormatter.string(from: date!).capitalized
+        dateFormatter.dateFormat = weekdayHeaderFormat.rawValue
+        return dateFormatter.string(from: date).capitalized
     }
 
     @objc func getWeekday(date: Date) -> Int {
@@ -587,6 +600,7 @@ private extension CalendarDateRangePickerViewController {
     
     func setupViews() {
         // Prepare collecton view
+        collectionView?.backgroundColor = calendarBackgroundColor
         collectionView?.register(CalendarDateRangePickerCell.self, forCellWithReuseIdentifier: Constants.cellReuseIdentifier)
         collectionView?.register(CalendarDateRangePickerHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constants.headerReuseIdentifier)
         
@@ -606,13 +620,11 @@ private extension CalendarDateRangePickerViewController {
             weekdayHeaderView.rightAnchor.constraint(equalTo: view.rightAnchor),
             weekdayHeaderView.heightAnchor.constraint(equalToConstant: Constants.fixedWeekdayHeaderHeight)
         ])
-        let weekdayTitles = (1...Constants.itemsPerRow).map { getWeekdayLabel(weekday: $0) }
-        weekdayHeaderView.setTitles(weekdayTitles)
         weekdayHeaderView.layoutMargins = UIEdgeInsets(top: 0, left: collectionViewInsets.left, bottom: 0, right: collectionViewInsets.right)
         updateWeekdayHeaderStyle()
+        updateWeekdayHeaderFormat()
         
         // Setup collection view
-        collectionView?.backgroundColor = calendarBackgroundColor
         collectionView?.dataSource = self
         collectionView?.delegate = self
     }
@@ -626,6 +638,11 @@ private extension CalendarDateRangePickerViewController {
             weekdayHeaderView.isHidden = false
             collectionViewInsets.top = Constants.fixedWeekdayHeaderHeight
         }
+    }
+    
+    func updateWeekdayHeaderFormat() {
+        let weekdayTitles = (1...Constants.itemsPerRow).map { getWeekdayLabel(weekday: $0) }
+        weekdayHeaderView.setTitles(weekdayTitles)
     }
     
     // MARK: - Helpers
