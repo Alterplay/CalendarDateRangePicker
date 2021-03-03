@@ -3,5 +3,5 @@ platform :ios, '12.0'
 use_frameworks!
 
 target 'CalendarDateRangePickerViewController_Example' do
-  pod 'AltyCalendarDateRangePicker'
+  pod 'AltyCalendarDateRangePicker', :path => '../'
 end

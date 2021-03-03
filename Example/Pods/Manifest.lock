@@ -1,16 +1,16 @@
 PODS:
-  - AltyCalendarDateRangePicker (1.7.2)
+  - AltyCalendarDateRangePicker (1.7.7)
 
 DEPENDENCIES:
-  - AltyCalendarDateRangePicker
+  - AltyCalendarDateRangePicker (from `../`)
 
-SPEC REPOS:
-  "git@github.com:Alterplay/Podspecs.git":
-    - AltyCalendarDateRangePicker
+EXTERNAL SOURCES:
+  AltyCalendarDateRangePicker:
+    :path: "../"
 
 SPEC CHECKSUMS:
-  AltyCalendarDateRangePicker: 2d0441052c9fe3fa73afee438d5257baf550a9f9
+  AltyCalendarDateRangePicker: 604451430fd62d2faad2683354bc69cdd4db6f92
 
-PODFILE CHECKSUM: 29c2a4e50607aa6cc244b9f1db747b5d60c174a3
+PODFILE CHECKSUM: 500a51e44df49835e0080b0d657709ea502de20a
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.10.0

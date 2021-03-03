@@ -18,7 +18,7 @@ class ViewController: UIViewController {
         let dateRangePickerViewController = CalendarDateRangePickerViewController(collectionViewLayout: UICollectionViewFlowLayout())
         dateRangePickerViewController.delegate = self
         dateRangePickerViewController.minimumDate = Date()
-        dateRangePickerViewController.maximumDate = Calendar.current.date(byAdding: .year, value: 2, to: Date())
+        dateRangePickerViewController.maximumDate = Calendar.current.date(byAdding: .year, value: 2, to: Date())!
         dateRangePickerViewController.selectedStartDate = Date()
         dateRangePickerViewController.disabledCellColor = UIColor(red: 0.599, green: 0.627, blue: 0.636, alpha: 0.1)
         dateRangePickerViewController.disabledTextColor = UIColor(red: 0.617, green: 0.67, blue: 0.708, alpha: 1)
@@ -37,6 +37,11 @@ class ViewController: UIViewController {
         dateRangePickerViewController.selectedColor = UIColor.clear
         dateRangePickerViewController.selectedLabelColor = .white
         dateRangePickerViewController.titleText = "Select Date Range"
+        
+        dateRangePickerViewController.weekdayCellColor = .black
+        dateRangePickerViewController.weekdayCellTextColor = .red
+        dateRangePickerViewController.weekdayHeaderFormat = .long
+        dateRangePickerViewController.weekdayHeaderStyle = .floating
         let navigationController = UINavigationController(rootViewController: dateRangePickerViewController)
         self.navigationController?.present(navigationController, animated: true, completion: nil)
     }
