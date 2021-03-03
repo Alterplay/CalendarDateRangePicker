@@ -43,7 +43,7 @@
 		A35120B1111B0AC9940800A2 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C9304EBA1ACFB048B6759598 /* Pods-CalendarDateRangePickerViewController_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CalendarDateRangePickerViewController_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-CalendarDateRangePickerViewController_Example/Pods-CalendarDateRangePickerViewController_Example.release.xcconfig"; sourceTree = "<group>"; };
 		D669374E1E3D0FC948166522 /* Pods_CalendarDateRangePickerViewController_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CalendarDateRangePickerViewController_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		EDA0E5C7687F6DABCF2414F9 /* CalendarDateRangePickerViewController.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = CalendarDateRangePickerViewController.podspec; path = ../CalendarDateRangePickerViewController.podspec; sourceTree = "<group>"; };
+		EDA0E5C7687F6DABCF2414F9 /* AltyCalendarDateRangePicker.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = AltyCalendarDateRangePicker.podspec; path = ../AltyCalendarDateRangePicker.podspec; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,7 +128,7 @@
 		607FACF51AFB993E008FA782 /* Podspec Metadata */ = {
 			isa = PBXGroup;
 			children = (
-				EDA0E5C7687F6DABCF2414F9 /* CalendarDateRangePickerViewController.podspec */,
+				EDA0E5C7687F6DABCF2414F9 /* AltyCalendarDateRangePicker.podspec */,
 				A35120B1111B0AC9940800A2 /* README.md */,
 				1C3A473AEA8A9FDE924642CC /* LICENSE */,
 			);

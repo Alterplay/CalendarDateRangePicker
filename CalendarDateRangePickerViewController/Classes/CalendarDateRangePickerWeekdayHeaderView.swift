@@ -19,6 +19,14 @@ final class CalendarDateRangePickerWeekdayHeaderView: UIView {
         }
     }
     
+    var titlesFont: UIFont? {
+        didSet {
+            labels.forEach { (label) in
+                label.font = titlesFont
+            }
+        }
+    }
+    
     // MARK: - Private properties
     
     private var labels: [UILabel] {
@@ -93,6 +101,7 @@ private extension CalendarDateRangePickerWeekdayHeaderView {
         label.textColor = titlesColor
         label.textAlignment = NSTextAlignment.center
         label.text = text
+        label.font = titlesFont
         return label
     }
     
