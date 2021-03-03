@@ -12,7 +12,7 @@ import UIKit
 class CalendarDateRangePickerCell: UICollectionViewCell {
     
     enum Edge {
-        case left, right, allVisible
+        case left, right, allVisible, allVisibleRounded
     }
     
     enum SelectionType {
@@ -102,9 +102,6 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         highlightedView.isHidden = true
         highlightedView.frame.origin.x = 0
         highlightedView.frame.size.width = frame.width + 2
-
-		highlightedView.layer.cornerRadius = 0
-		highlightedView.layer.maskedCorners = []
         
         if selectedImageView != nil {
             selectedImageView?.removeFromSuperview()
@@ -169,9 +166,16 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         highlightedView.isHidden = false
 
         switch edgeToRemove {
+        case .allVisibleRounded:
+            highlightedView.frame.origin.x = Consts.padding + additionalInset
+            highlightedView.frame.size.width = frame.width - (Consts.padding * 2) + additionalInset
+            highlightedView.layer.cornerRadius = Consts.cornerRadius
+            highlightedView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         case .allVisible:
             highlightedView.frame.origin.x = 0
             highlightedView.frame.size.width = frame.width + 5
+            highlightedView.layer.cornerRadius = 0
+            highlightedView.layer.maskedCorners = []
         case .left:
             highlightedView.frame.origin.x = Consts.padding + additionalInset
             highlightedView.frame.size.width -= Consts.padding + additionalInset

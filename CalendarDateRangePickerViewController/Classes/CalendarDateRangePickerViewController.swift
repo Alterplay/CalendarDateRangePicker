@@ -22,28 +22,28 @@ public extension CalendarDateRangePickerViewControllerDelegate {
 }
 
 public class CalendarDateRangePickerViewController: UICollectionViewController {
-
+    
     @objc public var selectedStartDate: Date?
     @objc public var selectedEndDate: Date?
     @objc public var selectedStartCell: IndexPath?
     @objc public var selectedEndCell: IndexPath?
-
+    
     @objc public var disabledDates: [Date]?
     public var occupiedDate: Date?
-
+    
     @objc public var cellHighlightedColor = UIColor(white: 0.9, alpha: 1.0)
     @objc public static let defaultCellFontSize: CGFloat = 15.0
     @objc public static let defaultHeaderFontSize: CGFloat = 17.0
-
+    
     @objc public var dayCellFont: UIFont = .systemFont(ofSize: 17)
     @objc public var headerFont: UIFont = .systemFont(ofSize: 15)
-
+    
     public var defaultCalendarCellTextColor = UIColor.darkGray
     public var leftSelectionImage: UIImage?
     public var rightSelectionImage: UIImage?
-
+    
     public var headerTextAlignment: NSTextAlignment = .center
-
+    
     @objc public var selectedColor = UIColor(red: 66/255.0, green: 150/255.0, blue: 240/255.0, alpha: 1.0)
     @objc public var selectedLabelColor = UIColor(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1.0)
     @objc public var highlightedLabelColor = UIColor(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1.0)
@@ -51,7 +51,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     public var disabledTextColor = UIColor.lightGray
     public var calendarBackgroundColor = UIColor.white
     @objc public var titleText = "Select Dates"
-
+    
     // MARK: - Public properties
     
     public weak var delegate: CalendarDateRangePickerViewControllerDelegate?
@@ -61,6 +61,8 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     
     public var firstDayOfWeek: DayOfWeek = .monday
     public var selectionMode: SelectionMode = .range
+    
+    public var highlightedDates = [Date]()
     
     public var weekdayCellColor = UIColor.white {
         didSet {
@@ -101,17 +103,17 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     private let weekdayHeaderView = CalendarDateRangePickerWeekdayHeaderView()
     
     // MARK: - Lifecycle
-
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
     }
-
+    
     public func reloadAndScrollToMid() {
         collectionView.reloadData()
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-
+            
             let calendar = Calendar.current
             let dateScrollTo = self.selectedStartDate ?? Date()
             let yearDiff = calendar.component(.year, from: dateScrollTo) - calendar.component(.year, from: self.minimumDate)
@@ -120,18 +122,18 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
             self.collectionView.scrollToItem(at: dateIndexPath, at: .centeredVertically, animated: false)
         }
     }
-
+    
     @objc func didTapCancel() {
         delegate?.didCancelPickingDateRange()
     }
-
+    
     @objc func didTapDone() {
         if selectedStartDate == nil || selectedEndDate == nil {
             return
         }
         delegate?.didPickDateRange(startDate: selectedStartDate!, endDate: selectedEndDate!)
     }
-
+    
     public func scrollToSelectedRange() {
         if self.selectionMode == .single {
             scroll(to: selectedStartCell)
@@ -149,7 +151,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         /// Header will placed on the top of calendar
         case fixed
     }
- 
+    
     public enum WeekdayHeaderFormat: String {
         /// Short format for header titles: [M, T, W, T, F, S, S]
         case short = "EEEEE"
@@ -162,7 +164,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         case monday
         case sunday
     }
-
+    
     public enum SelectionMode {
         case single, range
     }
@@ -172,11 +174,11 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
 // MARK: - UICollectionViewDataSource
 
 extension CalendarDateRangePickerViewController {
-
+    
     override public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return numberOfSection()
     }
-
+    
     override public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let firstDateForSection = getFirstDateForSection(section: section)
         let weekdayRowItems = weekdayHeaderStyle == .floating ? Constants.itemsPerRow : 0
@@ -187,7 +189,7 @@ extension CalendarDateRangePickerViewController {
     
     override public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cellReuseIdentifier, for: indexPath) as! CalendarDateRangePickerCell
-
+        
         cell.backgroundColor = collectionView.backgroundColor
         cell.highlightedColor = cellHighlightedColor
         cell.selectedColor = selectedColor
@@ -215,19 +217,23 @@ extension CalendarDateRangePickerViewController {
             let date = getDate(dayOfMonth: dayOfMonth, section: indexPath.section)
             cell.date = date
             cell.setText("\(dayOfMonth)", dropShadow: true)
-
+            
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-
-            if disabledDates != nil {
-                if (disabledDates?.contains(cell.date!))! {
-                    cell.disable()
-                }
+            
+            if let disabledDates = disabledDates, disabledDates.contains(cell.date!) {
+                cell.disable()
             }
+            
+            if highlightedDates.contains(where: { areSameDay(dateA: $0, dateB: date) }) {
+                // Cell should be highlighted only
+                cell.highlight(edgeToRemove: .allVisibleRounded)
+            }
+            
             if isBefore(dateA: date, dateB: minimumDate) || isAfter(dateA: date, dateB: maximumDate) {
                 cell.disable()
             }
-
+            
             if selectedStartDate != nil && selectedEndDate != nil && isBefore(dateA: selectedStartDate!, dateB: date) && isBefore(dateA: date, dateB: selectedEndDate!) {
                 var edge = CalendarDateRangePickerCell.Edge.allVisible
                 if isLeftEdge(row: indexPath.row) {
@@ -251,8 +257,7 @@ extension CalendarDateRangePickerViewController {
                 cell.select(with: selectionType)
             } else if selectedEndDate != nil && areSameDay(dateA: date, dateB: selectedEndDate!) {
                 cell.select(with: .end(shouldRemoveHighlight: isLeftEdge(row: indexPath.row)))
-            } else if let occupiedDate = occupiedDate,
-                      areSameDay(dateA: date, dateB: occupiedDate) {
+            } else if let occupiedDate = occupiedDate, areSameDay(dateA: date, dateB: occupiedDate) {
                 cell.selectedColor = selectedColor.withAlphaComponent(0.4)
                 cell.select(with: .single)
             }
@@ -260,7 +265,7 @@ extension CalendarDateRangePickerViewController {
         }
         return cell
     }
-
+    
     override public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         switch kind {
         case UICollectionView.elementKindSectionHeader:
@@ -273,13 +278,13 @@ extension CalendarDateRangePickerViewController {
             fatalError("Unexpected element kind")
         }
     }
-
+    
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
 extension CalendarDateRangePickerViewController: UICollectionViewDelegateFlowLayout {
-
+    
     override public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! CalendarDateRangePickerCell
         if cell.date == nil {
@@ -288,11 +293,11 @@ extension CalendarDateRangePickerViewController: UICollectionViewDelegateFlowLay
         if isBefore(dateA: cell.date!, dateB: minimumDate) || isAfter(dateA: cell.date!, dateB: maximumDate) {
             return
         }
-
+        
         if let disabledDates = disabledDates, disabledDates.contains(cell.date!) {
             return
         }
-
+        
         if selectedStartDate == nil {
             selectStartDate(cell.date, withIndexPath: indexPath)
         } else if selectedEndDate == nil {
@@ -318,7 +323,7 @@ extension CalendarDateRangePickerViewController: UICollectionViewDelegateFlowLay
         }
         collectionView.reloadData()
     }
-
+    
     public func collectionView(_ collectionView: UICollectionView,
                                layout collectionViewLayout: UICollectionViewLayout,
                                sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -327,47 +332,47 @@ extension CalendarDateRangePickerViewController: UICollectionViewDelegateFlowLay
         let itemWidth = floor(availableWidth / CGFloat(Constants.itemsPerRow))
         return CGSize(width: itemWidth, height: itemWidth)
     }
-
+    
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: view.frame.size.width, height: 50)
     }
-
+    
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 5
     }
-
+    
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-
+    
 }
 
 extension CalendarDateRangePickerViewController {
-
+    
     // Helper functions
-
+    
     @objc func getFirstDate() -> Date {
         var components = Calendar.current.dateComponents([.month, .year], from: minimumDate)
         components.day = 1
         return Calendar.current.date(from: components)!
     }
-
+    
     @objc func getFirstDateForSection(section: Int) -> Date {
         return Calendar.current.date(byAdding: .month, value: section, to: getFirstDate())!
     }
-
+    
     @objc func getMonthLabel(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM  yyyy"
         return dateFormatter.string(from: date).capitalized
     }
-
+    
     func getYearLabel(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy"
         return dateFormatter.string(from: date)
     }
-
+    
     @objc func getWeekdayLabel(weekday: Int) -> String {
         var components = DateComponents()
         components.calendar = Calendar.current
@@ -386,7 +391,7 @@ extension CalendarDateRangePickerViewController {
         dateFormatter.dateFormat = weekdayHeaderFormat.rawValue
         return dateFormatter.string(from: date).capitalized
     }
-
+    
     @objc func getWeekday(date: Date) -> Int {
         let weekday = Calendar.current.dateComponents([.weekday], from: date).weekday!
         if firstDayOfWeek == .monday {
@@ -399,48 +404,48 @@ extension CalendarDateRangePickerViewController {
             return weekday
         }
     }
-
+    
     @objc func getNumberOfDaysInMonth(date: Date) -> Int {
         return Calendar.current.range(of: .day, in: .month, for: date)!.count
     }
-
+    
     @objc func getDate(dayOfMonth: Int, section: Int) -> Date {
         var components = Calendar.current.dateComponents([.month, .year], from: getFirstDateForSection(section: section))
         components.day = dayOfMonth
         return Calendar.current.date(from: components)!
     }
-
+    
     @objc func areSameDay(dateA: Date, dateB: Date) -> Bool {
         return Calendar.current.compare(dateA, to: dateB, toGranularity: .day) == ComparisonResult.orderedSame
     }
-
+    
     @objc func isBefore(dateA: Date, dateB: Date) -> Bool {
         return Calendar.current.compare(dateA, to: dateB, toGranularity: .day) == ComparisonResult.orderedAscending
     }
-
+    
     private func isAfter(dateA: Date, dateB: Date) -> Bool {
         return Calendar.current.compare(dateA, to: dateB, toGranularity: .day) == ComparisonResult.orderedDescending
     }
-
+    
     private func isBeforeOrSame(dateA: Date, dateB: Date) -> Bool {
         return isBefore(dateA: dateA, dateB: dateB) || Calendar.current.isDate(dateA, inSameDayAs: dateB)
     }
-
+    
     private func isToday(date: Date) -> Bool {
         return Calendar.current.isDateInToday(date)
     }
-
+    
     @objc func isBetween(_ startDateCellIndex: IndexPath, and endDateCellIndex: IndexPath) -> Bool {
-
+        
         if disabledDates == nil {
             return false
         }
-
+        
         var index = startDateCellIndex.row
         var section = startDateCellIndex.section
         var currentIndexPath: IndexPath
         var cell: CalendarDateRangePickerCell?
-
+        
         while !(index == endDateCellIndex.row && section == endDateCellIndex.section) {
             currentIndexPath = IndexPath(row: index, section: section)
             cell = collectionView?.cellForItem(at: currentIndexPath) as? CalendarDateRangePickerCell
@@ -451,7 +456,7 @@ extension CalendarDateRangePickerViewController {
                 currentIndexPath = IndexPath(row: index, section: section)
                 cell = collectionView?.cellForItem(at: currentIndexPath) as? CalendarDateRangePickerCell
             }
-
+            
             if cell != nil && (disabledDates?.contains((cell!.date)!))! {
                 return true
             }
@@ -459,25 +464,25 @@ extension CalendarDateRangePickerViewController {
         }
         return false
     }
-
+    
     private func isLeftEdge(row: Int) -> Bool {
         return row % Constants.itemsPerRow == 0
     }
-
+    
     private func isRightEdge(row: Int) -> Bool {
         return (row + 1) % Constants.itemsPerRow == 0
     }
-
+    
     private func selectStartDate(_ startDate: Date?, withIndexPath indexPath: IndexPath) {
         selectedStartDate = startDate
         selectedStartCell = indexPath
         guard let selectedStartDate = selectedStartDate else { return }
         delegate?.didSelectStartDate(startDate: selectedStartDate)
     }
-
+    
     private func scroll(to indexPath: IndexPath?, animated: Bool = true) {
         guard let indexPath = indexPath else { return }
-
+        
         if let cell = collectionView.cellForItem(at: indexPath) {
             if cell.frame.maxY - collectionView.contentOffset.y > collectionView.frame.height - collectionView.contentInset.bottom {
                 collectionView.scrollToItem(at: indexPath, at: .bottom, animated: animated)
@@ -486,7 +491,7 @@ extension CalendarDateRangePickerViewController {
             collectionView.scrollToItem(at: indexPath, at: .bottom, animated: animated)
         }
     }
-
+    
     private func numberOfSection() -> Int {
         guard let minimumDateStartOfMonth = Calendar.current.dateInterval(of: .month, for: minimumDate)?.start else {  return 0 }
         guard let maximumDateEndOfMonth = Calendar.current.dateInterval(of: .month, for: maximumDate)?.end else { return 0 }
