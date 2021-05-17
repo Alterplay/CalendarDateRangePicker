@@ -23,18 +23,17 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     
     private enum Consts {
         static let padding: CGFloat = 5
-		static let cornerRadius: CGFloat = 6
     }
     
     var defaultTextColor: UIColor! {
         didSet { label?.textColor = defaultTextColor }
     }
-
-	var highlightedColor: UIColor!
+    
+    var highlightedColor: UIColor!
     var font = UIFont(name: "HelveticaNeue", size: CalendarDateRangePickerViewController.defaultCellFontSize) {
         didSet { label?.font = font }
     }
-
+    
     @objc var selectedColor: UIColor!
     @objc var selectedLabelColor: UIColor!
     @objc var highlightedLabelColor: UIColor!
@@ -46,6 +45,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
     @objc var selectedImageView: UIImageView?
     @objc var roundHighlightView: UIView?
     var cellBackgroundView: UIView!
+    var backgroundViewCornerRadius: CGFloat = 6
     var leftSelectionImage: UIImage?
     var rightSelectionImage: UIImage?
     private var highlightedView: UIView!
@@ -56,7 +56,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         super.init(frame: frame)
         setup()
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
@@ -76,7 +76,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         cellBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Consts.padding).isActive = true
         cellBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Consts.padding).isActive = true
         cellBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Consts.padding).isActive = true
-        cellBackgroundView.layer.cornerRadius = 6
+        cellBackgroundView.layer.cornerRadius = backgroundViewCornerRadius
         
         var highlightedFrame = frame
         highlightedFrame.origin.x = 0
@@ -93,11 +93,12 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         label.textAlignment = NSTextAlignment.center
         addSubview(label)
     }
-
+    
     @objc func reset() {
         label.textColor = defaultTextColor
         label.backgroundColor = UIColor.clear
         cellBackgroundView.backgroundColor = .white
+        cellBackgroundView.layer.cornerRadius = backgroundViewCornerRadius
         cellBackgroundView.isHidden = true
         highlightedView.isHidden = true
         highlightedView.frame.origin.x = 0
@@ -134,7 +135,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
             } else {
                 highlight(edgeToRemove: .left, withAdditionalInset: additionalInset)
             }
-                
+            
         case .end(let shouldRemoveHighlight):
             let x = -Consts.padding + 6
             selectedImageView = UIImageView(frame: CGRect(x: x, y: y, width: width, height: height))
@@ -151,7 +152,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
             cellBackgroundView.isHidden = false
         }
     }
-
+    
     @objc func addRoundHighlightView() {
         roundHighlightView = UIView(frame: highlightedView.frame)
         roundHighlightView?.backgroundColor = highlightedColor
@@ -164,12 +165,12 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         cellBackgroundView.isHidden = true
         highlightedView.backgroundColor = highlightedColor
         highlightedView.isHidden = false
-
+        
         switch edgeToRemove {
         case .allVisibleRounded:
             highlightedView.frame.origin.x = Consts.padding + additionalInset
             highlightedView.frame.size.width = frame.width - (Consts.padding * 2) + additionalInset
-            highlightedView.layer.cornerRadius = Consts.cornerRadius
+            highlightedView.layer.cornerRadius = backgroundViewCornerRadius
             highlightedView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         case .allVisible:
             highlightedView.frame.origin.x = 0
@@ -179,33 +180,33 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
         case .left:
             highlightedView.frame.origin.x = Consts.padding + additionalInset
             highlightedView.frame.size.width -= Consts.padding + additionalInset
-			highlightedView.layer.cornerRadius = Consts.cornerRadius
-			highlightedView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+            highlightedView.layer.cornerRadius = backgroundViewCornerRadius
+            highlightedView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         case .right:
             highlightedView.frame.size.width = frame.width - Consts.padding - additionalInset
-			highlightedView.layer.cornerRadius = Consts.cornerRadius
+            highlightedView.layer.cornerRadius = backgroundViewCornerRadius
             highlightedView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         }
     }
-
+    
     @objc func disable() {
         cellBackgroundView.backgroundColor = disabledBackgroundColor
         label.textColor = disabledLabelColor
     }
     
     func setText(_ text: String, dropShadow: Bool) {
-		label.text = text.uppercased()
+        label.text = text.uppercased()
         if dropShadow {
             cellBackgroundView.isHidden = false
         } else {
             cellBackgroundView.isHidden = true
         }
     }
-
-	func applyCurrentDateBorder(_ isApply: Bool) {
-		cellBackgroundView.layer.borderWidth = isApply ? 1 : 0
-		cellBackgroundView.layer.borderColor = isApply ? selectedColor.cgColor : disabledBackgroundColor.cgColor
-	}
+    
+    func applyCurrentDateBorder(_ isApply: Bool) {
+        cellBackgroundView.layer.borderWidth = isApply ? 1 : 0
+        cellBackgroundView.layer.borderColor = isApply ? selectedColor.cgColor : disabledBackgroundColor.cgColor
+    }
 }
 
 // MARK: - Private
@@ -213,7 +214,7 @@ class CalendarDateRangePickerCell: UICollectionViewCell {
 private extension CalendarDateRangePickerCell {
     func addShadow() {
         let bounds = CGRect(x: 0, y: 0, width: frame.width - Consts.padding * 2, height: frame.width - Consts.padding * 2)
-        let shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: layer.cornerRadius)
+        let shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: backgroundViewCornerRadius)
         cellBackgroundView.layer.shadowPath = shadowPath.cgPath
         cellBackgroundView.layer.shadowColor = UIColor(red: 0.165, green: 0.208, blue: 0.239, alpha: 0.06).cgColor
         cellBackgroundView.layer.shadowOpacity = 1

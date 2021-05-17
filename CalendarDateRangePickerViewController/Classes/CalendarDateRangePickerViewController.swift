@@ -9,7 +9,7 @@
 
 import UIKit
 
-public protocol CalendarDateRangePickerViewControllerDelegate: class {
+public protocol CalendarDateRangePickerViewControllerDelegate: AnyObject {
     func didCancelPickingDateRange()
     func didPickDateRange(startDate: Date, endDate: Date)
     func didSelectStartDate(startDate: Date)
@@ -32,6 +32,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     public var occupiedDate: Date?
     
     @objc public var cellHighlightedColor = UIColor(white: 0.9, alpha: 1.0)
+    @objc public var cellBackroundCornerRadius: CGFloat = 6
     @objc public static let defaultCellFontSize: CGFloat = 15.0
     @objc public static let defaultHeaderFontSize: CGFloat = 17.0
     
@@ -148,6 +149,15 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         }
     }
     
+    // MARK: - Functions
+    
+    public func setWeekdayHeaderShadow(color: UIColor) {
+        weekdayHeaderView.layer.shadowColor = color.cgColor
+        weekdayHeaderView.layer.shadowOffset = CGSize(width: 0, height: 4)
+        weekdayHeaderView.layer.shadowRadius = 10
+        weekdayHeaderView.layer.shadowOpacity = 0.1
+    }
+    
     // MARK: - Helpers
     
     public enum WeekdayHeaderStyle: Int {
@@ -207,6 +217,7 @@ extension CalendarDateRangePickerViewController {
         cell.font = dayCellFont
         cell.leftSelectionImage = leftSelectionImage
         cell.rightSelectionImage = rightSelectionImage
+        cell.backgroundViewCornerRadius = cellBackroundCornerRadius
         cell.reset()
         
         let blankItems = getWeekday(date: getFirstDateForSection(section: indexPath.section)) - 1
@@ -519,6 +530,7 @@ private extension CalendarDateRangePickerViewController {
         collectionView?.register(CalendarDateRangePickerHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constants.headerReuseIdentifier)
         
         // Setup view
+        view.clipsToBounds = true
         view.addSubview(weekdayHeaderView)
         
         // Setup navigation item
