@@ -32,7 +32,7 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
     public var occupiedDate: Date?
     
     @objc public var cellHighlightedColor = UIColor(white: 0.9, alpha: 1.0)
-    @objc public var cellBackroundCornerRadius: CGFloat = 8
+    @objc public var cellBackroundCornerRadius: CGFloat = 6
     @objc public static let defaultCellFontSize: CGFloat = 15.0
     @objc public static let defaultHeaderFontSize: CGFloat = 17.0
     
@@ -147,6 +147,15 @@ public class CalendarDateRangePickerViewController: UICollectionViewController {
         } else {
             scroll(to: selectedEndCell)
         }
+    }
+    
+    // MARK: - Functions
+    
+    public func setWeekdayHeaderShadow(color: UIColor) {
+        weekdayHeaderView.layer.shadowColor = color.cgColor
+        weekdayHeaderView.layer.shadowOffset = CGSize(width: 0, height: 4)
+        weekdayHeaderView.layer.shadowRadius = 10
+        weekdayHeaderView.layer.shadowOpacity = 0.1
     }
     
     // MARK: - Helpers
@@ -538,10 +547,6 @@ private extension CalendarDateRangePickerViewController {
             weekdayHeaderView.heightAnchor.constraint(equalToConstant: Constants.fixedWeekdayHeaderHeight)
         ])
         weekdayHeaderView.layoutMargins = UIEdgeInsets(top: 0, left: collectionViewInsets.left, bottom: 0, right: collectionViewInsets.right)
-        weekdayHeaderView.layer.shadowColor = UIColor.black.cgColor
-        weekdayHeaderView.layer.shadowOffset = CGSize(width: 0, height: 4)
-        weekdayHeaderView.layer.shadowRadius = 10
-        weekdayHeaderView.layer.shadowOpacity = 0.1
         updateWeekdayHeaderStyle()
         updateWeekdayHeaderFormat()
         
